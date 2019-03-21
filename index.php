@@ -11,7 +11,7 @@ function autoload($className)
     $classNameWithNamespaceArray = explode('\\', $className);
     $classFile = array_pop($classNameWithNamespaceArray).'.php';
 
-    if (file_exists(ROOT. DS. 'intrefaces'. DS. $classFile)){
+    if (file_exists(ROOT. DS. 'interfaces'. DS. $classFile)){
         include_once(ROOT. DS. 'interfaces'. DS. $classFile);
     } elseif (file_exists(ROOT. DS. 'core'. DS. $classFile)) {
         include_once(ROOT. DS. 'core'. DS. $classFile);
@@ -27,4 +27,4 @@ spl_autoload_register('autoload');
 
 $url = isset( $_SERVER['PATH_INFO']) ? explode('/', trim($_SERVER['PATH_INFO'], '/')) : [];
 
-Core\Router::route($url);
+App\Core\Router::route($url);
