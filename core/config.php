@@ -1,3 +1,6 @@
-<?php namespace Core;
+<?php
 
+namespace Core;
+
+//Site title
 define ('TITLE', 'OOP');
