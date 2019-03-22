@@ -1,15 +1,12 @@
 <?php
 namespace App\Core;
 
-class Controller implements \App\Interfaces\ControllerInterface
+class Controller
 {
     public function __construct()
     {
 
     }
 
-    public function test()
-    {
 
-    }
 }
