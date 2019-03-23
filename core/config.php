@@ -3,7 +3,7 @@
 namespace Core;
 
 //Site title
-define ('TITLE', 'OOP');
+define ('SITE_TITLE', 'OOP');
 
 define ('URL_ROOT', '/oop/');
 
