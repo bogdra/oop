@@ -7,10 +7,6 @@ class HomeController extends \App\Core\Controller
     {
         parent::__construct();
     }
-   public function test()
-   {
-       echo 'test';
-   }
 
    public function indexAction()
    {
