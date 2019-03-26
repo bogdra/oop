@@ -5,7 +5,7 @@ namespace App\Interfaces;
 /**
  * Interface PersistenceInterface
  */
-interface PersistenceInterface extends \Countable, \Iterator
+interface PersistenceInterface
 {
     public function read();
     public function insert();
