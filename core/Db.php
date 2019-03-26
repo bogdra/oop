@@ -44,4 +44,3 @@ class DB implements PersistenceInterface
 
     }
 }
-}
