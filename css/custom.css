@@ -3,7 +3,7 @@ footer {
     background-color: #eee;
     height:50px;
     position:relative;
-    top:calc(100vh - 130px);
+    top:calc(100vh - 150px);
     display:flex;
     justify-content: center;
     align-items: center;

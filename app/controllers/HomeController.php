@@ -16,7 +16,7 @@ class HomeController extends \App\Core\Controller
    public function indexAction()
    {
         $params = [
-            'currencyArray' => $this->currency->getCurrencyRate()
+            'currencyArray' => $this->currency->getCurrencyRatesArray()
         ];
 
         $this->view->render('home/index', $params);

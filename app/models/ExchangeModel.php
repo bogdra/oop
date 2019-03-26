@@ -26,30 +26,31 @@ class ExchangeModel extends \App\Core\Model
         return $this->inputData;
     }
 
-    private function setCurrencyRate() :void
+    private function setCurrencyRate()
     {
         $xmlRawInput = file_get_contents(INPUT_SOURCE) or die('Could not retrieve the file');
         $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
     }
 
-    public function setDate() :void
+    /**
+     * setter of the Date from the currency object
+     */
+    private function setDate()
     {
         $this->date = (string)($this->inputData->attributes()['time']);
     }
 
-    public function getDate() :string
+    /**
+     * getter function of the date
+     * @return date
+     */
+    public function getDate()
     {
         return $this->date;
     }
 
-    public function test()
+    public function setCurrencyRatesArray()
     {
-        return $this->inputData;
-    }
-
-    public function setCurrencyRatesArray() :void
-    {
-        $test = [];
         foreach ($this->inputData->children() as $currency_parity)
         {
           $test[(string)$currency_parity->attributes()['currency']] = (float)$currency_parity->attributes()['rate'];
@@ -57,7 +58,7 @@ class ExchangeModel extends \App\Core\Model
         $this->exchangesArray = $test;
     }
 
-    public function getCurrencyRatesArray() :array
+    public function getCurrencyRatesArray()
     {
         return $this->exchangesArray;
     }
