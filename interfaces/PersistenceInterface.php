@@ -3,9 +3,9 @@
 namespace App\Interfaces;
 
 /**
- * Interface RepositoryInterface
+ * Interface PersistenceInterface
  */
-interface RepositoryInterface extends \Countable, \Iterator
+interface PersistenceInterface extends \Countable, \Iterator
 {
     public function read();
     public function insert();
