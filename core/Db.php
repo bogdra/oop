@@ -2,9 +2,6 @@
 
 namespace App\Core;
 
-use App\Interfaces\RepositoryInterface;
+use App\Interfaces\PersistenceInterface;
 
-class Db implements RepositoryInterface
-{
-
-}
+c
