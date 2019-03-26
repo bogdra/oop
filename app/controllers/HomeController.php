@@ -15,6 +15,7 @@ class HomeController extends \App\Core\Controller
 
    public function indexAction()
    {
+       var_dump( $this->currency->convertTo('USD'));
         $params = [
             'currencyArray' => $this->currency->getCurrencyRatesArray()
         ];

@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use mysql_xdevapi\Exception;
+
 class ExchangeModel extends \App\Core\Model
 {
     private $inputData;
@@ -61,6 +63,22 @@ class ExchangeModel extends \App\Core\Model
     public function getCurrencyRatesArray()
     {
         return $this->exchangesArray;
+    }
+
+    private function getCurrencyCodes()
+    {
+        return array_keys($this->exchangesArray);
+    }
+
+    public function convertTo(string $currencyCode)
+    {
+        if (!in_array($currencyCode, $this->getCurrencyCodes()))
+        {
+            throw new Exception('The selected currency is not supported');
+        }
+
+        return 'test';
+
     }
 
 }
