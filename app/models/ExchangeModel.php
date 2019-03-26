@@ -5,38 +5,61 @@ namespace App\Model;
 class ExchangeModel extends \App\Core\Model
 {
     private $inputData;
-
-    public $date;
+    public  $date,
+            $exchangesArray;
 
     public function __construct()
     {
         parent::__construct();
         $this->setCurrencyRate();
+        $this->setDate();
+        $this->setCurrencyRatesArray();
     }
 
-    private function convertXmlToObj(string $source)
+    private function convertXmlToObj(string $source) :\SimpleXMLElement
     {
-        return simplexml_load_string($source);
+        return new \SimpleXMLElement($source);
     }
 
-    public function getCurrencyRate()
+    public function getCurrencyRate() :\SimpleXMLElement
     {
         return $this->inputData;
     }
 
-    private function setCurrencyRate()
+    private function setCurrencyRate() :void
     {
-        $xmlRawInput = file_get_contents(INPUT_SOURCE);
-        $this->inputData = $this->convertXmlToObj($xmlRawInput);
+        $xmlRawInput = file_get_contents(INPUT_SOURCE) or die('Could not retrieve the file');
+        $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
     }
 
-    public function setDate()
+    public function setDate() :void
     {
-       // $this->date = $this->inputData->Cube->Cube->@attributes['time'];
+        $this->date = (string)($this->inputData->attributes()['time']);
+    }
+
+    public function getDate() :string
+    {
+        return $this->date;
     }
 
     public function test()
     {
-        return $this->inputData->Cube->Cube;
+        return $this->inputData;
     }
+
+    public function setCurrencyRatesArray() :void
+    {
+        $test = [];
+        foreach ($this->inputData->children() as $currency_parity)
+        {
+          $test[(string)$currency_parity->attributes()['currency']] = (float)$currency_parity->attributes()['rate'];
+        }
+        $this->exchangesArray = $test;
+    }
+
+    public function getCurrencyRatesArray() :array
+    {
+        return $this->exchangesArray;
+    }
+
 }
