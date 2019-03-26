@@ -1,5 +1,5 @@
             <footer>
-                <p> All rights Reserved .c 2019</p>
+                <p> All rights Reserved © 2019</p>
             </footer>
 
             <!-- Optional JavaScript -->
