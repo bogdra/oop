@@ -3,7 +3,6 @@ footer {
     background-color: #eee;
     height:50px;
     position:relative;
-    top:calc(100vh - 150px);
     display:flex;
     justify-content: center;
     align-items: center;
@@ -13,4 +12,8 @@ footer > p {
     margin:0;
     padding: 0;
     padding: 0;
+}
+
+.card {
+    margin: 20px 0;
 }

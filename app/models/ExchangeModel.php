@@ -66,7 +66,10 @@ class ExchangeModel extends \App\Core\Model
 
     public function getCurrencyRatesKeys()
     {
-        return array_keys($this->exchangesArray);
+        $codes = \array_keys($this->exchangesArray);
+        \array_unshift($codes, "EUR");
+
+        return $codes;
     }
 
 
