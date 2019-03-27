@@ -24,7 +24,7 @@ class Router
            } else {
                $params = [];
            }
-           // var_dump($params);die();
+
             (self::checkControllerAndActionExists()) ?
                 call_user_func_array([new self::$controller, self::$action], $params):
                 self::redirect('Restricted/' );
@@ -49,7 +49,7 @@ class Router
                 header('Location: '.URL_ROOT.$location);
                 exit();
             }
-            die('Header allready sent. Killed execution');
+            die('Header already sent. Killed execution');
     }
 
 
