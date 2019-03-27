@@ -12,11 +12,11 @@ class Router
           $tempController = (isset($urlElements[0]) && $urlElements[0]!='') ? \ucfirst($urlElements[0]).'Controller' : DEFAULT_CONTROLLER.'Controller';
           self::$controller = 'App\Controller\\'.$tempController;
 
-          self::$action  = (isset($urlElements[1]) && $urlElements[1]!='') ? \ucfirst($urlElements[1]).'Action' : DEFAULT_ACTION.'Action';
+          self::$action  = (isset($urlElements[1]) && $urlElements[1]!='') ? \lcfirst($urlElements[1]).'Action' : DEFAULT_ACTION.'Action';
 
-          //TODO trebuie rescris mai elegant
+          //TODO: trebuie rescris mai elegant
            if (\count($urlElements) > 2) {
-               for ($i = 1; $i < \count($urlElements);$i++) {
+               for ($i = 2; $i < \count($urlElements);$i++) {
                    if ($urlElements[$i] != '') {
                        $params[] = $urlElements[$i];
                    }
@@ -24,9 +24,9 @@ class Router
            } else {
                $params = [];
            }
-
+           // var_dump($params);die();
             (self::checkControllerAndActionExists()) ?
-                call_user_func_array([new self::$controller, 'indexAction'], $params):
+                call_user_func_array([new self::$controller, self::$action], $params):
                 self::redirect('Restricted/' );
     }
 
