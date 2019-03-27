@@ -16,7 +16,7 @@ class Router
 
           //TODO trebuie rescris mai elegant
            if (\count($urlElements) > 2) {
-               for ($i = 1; $i < \count($urlElements);$i++) {
+               for ($i = 2; $i < \count($urlElements);$i++) {
                    if ($urlElements[$i] != '') {
                        $params[] = $urlElements[$i];
                    }
@@ -24,9 +24,8 @@ class Router
            } else {
                $params = [];
            }
-
             (self::checkControllerAndActionExists()) ?
-                call_user_func_array([new self::$controller, 'indexAction'], $params):
+                call_user_func_array([new self::$controller, self::$action], $params):
                 self::redirect('Restricted/' );
     }
 
