@@ -13,11 +13,12 @@ class HomeController extends \App\Core\Controller
         $this->currency =  new ExchangeModel();
     }
 
+
    public function indexAction()
    {
-       var_dump( $this->currency->convertTo('USD'));
+
         $params = [
-            'currencyArray' => $this->currency->getCurrencyRatesArray()
+            'currencyArrayKeys' => $this->currency->getCurrencyRatesKeys()
         ];
 
         $this->view->render('home/index', $params);

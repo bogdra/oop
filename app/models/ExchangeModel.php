@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use mysql_xdevapi\Exception;
-
 class ExchangeModel extends \App\Core\Model
 {
     private $inputData;
@@ -65,20 +63,40 @@ class ExchangeModel extends \App\Core\Model
         return $this->exchangesArray;
     }
 
-    private function getCurrencyCodes()
+
+    public function getCurrencyRatesKeys()
     {
         return array_keys($this->exchangesArray);
     }
 
+
     public function convertTo(string $currencyCode)
     {
-        if (!in_array($currencyCode, $this->getCurrencyCodes()))
+        if ($currencyCode == 'EUR')
         {
-            throw new Exception('The selected currency is not supported');
+            return $this->exchangesArray;
         }
 
-        return 'test';
+        if (!in_array($currencyCode, $this->getCurrencyRatesKeys()))
+        {
+            throw new \Exception('The selected currency is not supported');
+        }
 
+        $baseConversionRate = $this->exchangesArray[strtoupper($currencyCode)];
+
+        foreach ($this->exchangesArray as $exchangeCod => $exchangeValue)
+        {
+            if ($exchangeCod != $currencyCode)
+            {
+                $newConversionArray[$exchangeCod] = round ($this->exchangesArray[$exchangeCod] / $baseConversionRate, 2);
+            }
+            else
+            {
+                $newConversionArray['EUR'] = round( 1 / $this->exchangesArray[$currencyCode], 2);
+            }
+        }
+
+        return $newConversionArray;
     }
 
 }
