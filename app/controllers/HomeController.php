@@ -16,7 +16,7 @@ class HomeController extends \App\Core\Controller
 
    public function indexAction()
    {
-
+       // \Core\H::dnd($this->currency->getCurrencyRatesKeys());
         $params = [
             'currencyArrayKeys' => $this->currency->getCurrencyRatesKeys()
         ];
