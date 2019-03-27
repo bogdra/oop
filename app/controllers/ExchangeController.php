@@ -14,18 +14,11 @@ class ExchangeController extends Controller
         $this->currencyRates =  new ExchangeModel();
     }
 
-   public function indexAction()
-   {
-        echo('index');
-   }
 
     public function getAction(string $currency)
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'GET')
-        {
-            die('Wrong request type');
-        }
+        $this->allowedRequestMethods(['GET']);
 
-        var_dump( $this->currencyRates->convertTo($currency));
+        print_r(json_encode($this->currencyRates->convertTo($currency)));
     }
 }

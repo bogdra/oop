@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use mysql_xdevapi\Exception;
-
 class ExchangeModel extends \App\Core\Model
 {
     private $inputData;
