@@ -3,11 +3,11 @@ namespace App\Core;
 
 class Controller
 {
-    public      $view;
+    public  $view;
 
     public function __construct()
     {
-        $this->view         = new \App\Core\View();
+        $this->view = new \App\Core\View();
     }
 
     /**

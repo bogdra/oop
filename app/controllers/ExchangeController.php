@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Core\Controller;
-use App\Model\ExchangeModel;
+use App\Services\CurrencyService;
 
 class ExchangeController extends Controller
 {
@@ -11,14 +11,17 @@ class ExchangeController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->currencyRates =  new ExchangeModel();
+        $this->currencyRates =  new CurrencyService();
     }
 
 
-    public function getAction(string $currency)
+    public function getAction(string $currency = '')
     {
         $this->allowedRequestMethods(['GET']);
 
-        print_r(json_encode($this->currencyRates->convertTo($currency)));
+       // print_r($this->currencyRates->convertTo($currency));
+        print_r($this->currencyRates->getBaseConversionRate('RON'));
+       // print_r($this->currencyRates->getExchangeRatesObjectsArray());
     }
 }
+
