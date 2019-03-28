@@ -4,17 +4,19 @@ namespace App\Core;
 class Controller
 {
     public      $view;
-    protected   $controller,
-                $action;
 
     public function __construct()
     {
-        //$this->controller   = $controller;
-        //$this->action       = $action;
         $this->view         = new \App\Core\View();
     }
 
-    public function allowedRequestMethods($methods = [])
+    /**
+     * Checks that the request method used is in the allowed array of requests
+     *
+     * @param array $methods
+     * @throws \Exception
+     */
+    protected function allowedRequestMethods($methods = [])
     {
         $availableMethods = ['GET','POST','PUT','DELETE'];
 

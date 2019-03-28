@@ -16,12 +16,6 @@ class DB implements PersistenceInterface
     public static function init()
     {
 
-        if (!isset(self::$instance))
-        {
-            self::$instance = new DB();
-
-        }
-        return self::$instance;
     }
 
     public function read()
@@ -40,6 +34,11 @@ class DB implements PersistenceInterface
     }
 
     public function delete()
+    {
+
+    }
+
+    public function count()
     {
 
     }
