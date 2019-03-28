@@ -20,14 +20,15 @@ class View
 
     public function getSiteTitle() :string
     {
-        echo 'Exercitiu Leu';
+        echo 'Exercitiu';
     }
 
     public function getPartial(string $partialName)
     {
         $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
 
-        if (file_exists($partialFullPath)) {
+        if (file_exists($partialFullPath))
+        {
             include($partialFullPath);
         }
 
