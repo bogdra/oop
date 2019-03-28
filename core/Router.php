@@ -4,8 +4,8 @@ namespace App\Core;
 
 class Router
 {
-    private static  $controller, //static property that holds the current controller class name
-                    $action;     //static property that holds the current action method name
+    private static  $controller,
+                    $action;
 
     /**
      * Router method to call the right conntroller / action
@@ -16,14 +16,14 @@ class Router
     {
           $tempController = (isset($urlElements[0]) && $urlElements[0]!='') ? \ucfirst($urlElements[0]).'Controller' : DEFAULT_CONTROLLER.'Controller';
           self::$controller = 'App\Controller\\'.$tempController;
-          array_shift($urlElements);
 
-          //\Core\H::dnd(self::$controller);
+         
           self::$action  = (isset($urlElements[1]) && $urlElements[1]!='') ? \lcfirst($urlElements[1]).'Action' : DEFAULT_ACTION.'Action';
 
-          //TODO: trebuie rescris mai elegant
+          //TODO: needs rewrite
            if (\count($urlElements) > 2) {
-               for ($i = 2; $i < \count($urlElements);$i++) {
+               for ($i = 2; $i < \count($urlElements);$i++)
+               {
                    if ($urlElements[$i] != '') {
                        $params[] = $urlElements[$i];
                    }
@@ -44,9 +44,11 @@ class Router
      */
      public static function checkControllerAndActionExists()
      {
-            if (class_exists(self::$controller) ) {
+            if (class_exists(self::$controller) )
+            {
                 $tempObject = new self::$controller;
-                if (method_exists($tempObject, self::$action)) {
+                if (method_exists($tempObject, self::$action))
+                {
                     return true;
                 }
                 unset ($tempObject);
@@ -60,9 +62,10 @@ class Router
      * @param string $location
      * @param int $status
      */
-    public static function redirect(string $location, int $status = 301)
+    public static function redirect(string $location, $status = 301)
     {
-            if(!headers_sent()) {
+            if(!headers_sent())
+            {
                 http_response_code($status);
                 header('Location: '.URL_ROOT.$location);
                 exit();

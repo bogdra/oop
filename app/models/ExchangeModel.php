@@ -73,7 +73,6 @@ class ExchangeModel extends \App\Core\Model
         return $codes;
     }
 
-
     /**
      * Converts the currencies to a specific currency
      *
