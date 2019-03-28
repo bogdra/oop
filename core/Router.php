@@ -4,14 +4,21 @@ namespace App\Core;
 
 class Router
 {
-    private static  $controller,
-                    $action;
+    private static  $controller, //static property that holds the current controller class name
+                    $action;     //static property that holds the current action method name
 
+    /**
+     * Router method to call the right conntroller / action
+     *
+     * @param array $urlElements
+     */
     public static function route(array $urlElements)
     {
           $tempController = (isset($urlElements[0]) && $urlElements[0]!='') ? \ucfirst($urlElements[0]).'Controller' : DEFAULT_CONTROLLER.'Controller';
           self::$controller = 'App\Controller\\'.$tempController;
+          array_shift($urlElements);
 
+          //\Core\H::dnd(self::$controller);
           self::$action  = (isset($urlElements[1]) && $urlElements[1]!='') ? \lcfirst($urlElements[1]).'Action' : DEFAULT_ACTION.'Action';
 
           //TODO: trebuie rescris mai elegant
@@ -30,6 +37,11 @@ class Router
                 self::redirect('Restricted/' );
     }
 
+    /**
+     * Checks if the controller file exists and if so if the action required exists
+     *
+     * @return bool
+     */
      public static function checkControllerAndActionExists()
      {
             if (class_exists(self::$controller) ) {
@@ -42,6 +54,12 @@ class Router
             return false;
     }
 
+    /**
+     * Redirect the user to a specific page
+     *
+     * @param string $location
+     * @param int $status
+     */
     public static function redirect(string $location, int $status = 301)
     {
             if(!headers_sent()) {
