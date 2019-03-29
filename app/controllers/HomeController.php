@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-class HomeController extends \App\Core\Controller
+class HomeController extends Controller
 {
     public function __construct()
     {

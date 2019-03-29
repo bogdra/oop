@@ -1,15 +1,20 @@
 <?php
-namespace App\Core;
+namespace App\Controller;
+
+use \App\Core\View;
 
 class Controller
 {
     public $view;
-    public $currentRequestMethod = $_SERVER['REQUEST_METHOD'];
+    public $currentRequestMethod;
+
 
     public function __construct()
     {
-        $this->view = new \App\Core\View();
+        $this->view = new View();
+        $this->currentRequestMethod = $_SERVER['REQUEST_METHOD'];
     }
+
 
     public function allowedRequestMethods($allowedMethods = [])
     {
@@ -30,6 +35,7 @@ class Controller
             {
                 \Core\H::dnd($e);
             }
+
 
         }
     }
