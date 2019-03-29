@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Entities\currencyEntity;
+use phpDocumentor\Reflection\Types\Object_;
 
 class CurrencyService
 {
@@ -11,19 +12,25 @@ class CurrencyService
 
     public function __construct()
     {
-        $this->setCurrencyRateObj(INPUT_SOURCE);
-        $this->setExchangeRatesObjectsArray();
+        $this->setBaseCurrencyObj(INPUT_SOURCE);
+        $this->setEurExchangeRatesObjectsArray();
     }
 
 
-    private function setCurrencyRateObj($source)
+    private function setBaseCurrencyObj(string $source) :void
     {
-
-      $xmlRawInput =  file_get_contents($source) ;
-        if (!$xmlRawInput){
-            throw new \Exception('The file does not exists');
-        }
-        $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
+          $xmlRawInput =  file_get_contents($source) ;
+          try
+          {
+              if (!$xmlRawInput){
+                  throw new \Exception('The file does not exists');
+              }
+          }
+          catch (\Exception $e)
+          {
+              echo $e->getMessage();
+          }
+          $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
     }
 
 
@@ -33,7 +40,7 @@ class CurrencyService
     }
 
 
-    public function setExchangeRatesObjectsArray()
+    public function setEurExchangeRatesObjectsArray()
     {
         foreach ($this->inputData->children() as $currency_parity)
         {
@@ -44,21 +51,20 @@ class CurrencyService
             );
         }
         $this->exchangeRatesArrayOfObjects = $tempArray;
-
     }
 
 
-    public function getExchangeRatesObjectsArray()
+    public function getEurExchangeRatesObjectsArray() :array
     {
         return $this->exchangeRatesArrayOfObjects;
     }
 
 
-    public function getCurrencyRatesKeys()
+    public function getExchangeRatesKeys() :array
     {
-        foreach ($this->getExchangeRatesObjectsArray() as $obj)
+        foreach ($this->getEurExchangeRatesObjectsArray() as $currencyObj)
         {
-            $codes[] = $obj->currencyTo;
+            $codes[] = $currencyObj->currencyTo;
         }
         \array_unshift($codes, "EUR");
 
@@ -79,16 +85,16 @@ class CurrencyService
     }
 
 
-    public function convertTo(string $currencyCode)
+    public function convertTo(string $currencyCode) :array
     {
         if ($currencyCode == 'EUR')
         {
-            return $this->getExchangeRatesObjectsArray();
+            return $this->getEurExchangeRatesObjectsArray();
         }
 
         $baseConversionRate = $this->getBaseConversionRate($currencyCode);
 
-        foreach ($this->getExchangeRatesObjectsArray() as $exchangeCodeObj)
+        foreach ($this->getEurExchangeRatesObjectsArray() as $exchangeCodeObj)
         {
             if ($exchangeCodeObj->currencyTo != $currencyCode)
             {

@@ -1,11 +1,20 @@
 <?php
 namespace App\Core;
 
+use mysql_xdevapi\Exception;
+
 class View
 {
-    protected   $viewsPath = ROOT. DS. 'app'. DS. 'views',
-                $siteTitle = SITE_TITLE,
-                $params;
+    protected   $viewsPath;
+    protected   $title;
+    public      $params;
+
+
+    public function __construct()
+    {
+        $this->viewsPath = ROOT. DS. 'app'. DS. 'views';
+        $this->title = SITE_TITLE;
+    }
 
     public function render(string $view, $params = [] )
     {
@@ -15,22 +24,36 @@ class View
         $viewPath = $this->viewsPath. DS. $controller. DS. $action. '.php';
 
         (file_exists($viewPath)) ? include $viewPath : die("The view $view does not exists");
-
     }
 
-    public function getSiteTitle() :string
+    public function setTitle(string $title) :void
     {
-        echo 'Exercitiu';
+       $this->title = $title;
     }
 
-    public function getPartial(string $partialName)
+    public function getTitle() :string
+    {
+        return $this->title;
+    }
+
+    public function getPartial(string $partialName) :void
     {
         $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
 
-        if (file_exists($partialFullPath))
+        try
         {
-            include($partialFullPath);
+            if (!file_exists($partialFullPath))
+            {
+                throw new \Exception("The partial html file,$partialFullPath does not exists");
+            }
+            else
+            {
+                include($partialFullPath);
+            }
         }
-
+        catch (\Exception $e)
+        {
+            echo $e->getMessage();
+        }
     }
 }

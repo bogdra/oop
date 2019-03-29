@@ -17,7 +17,7 @@ class HomeController extends Controller
         $currency =  new CurrencyService();
 
         $params = [
-            'currencyArrayKeys' => $currency->getCurrencyRatesKeys()
+            'currencyArrayKeys' => $currency->getExchangeRatesKeys()
         ];
 
         $this->view->render('home/index', $params);

@@ -13,7 +13,7 @@ class ExchangeController extends Controller
 
     public function getAction(string $currency = '')
     {
-        $this->allowedRequestMethods(['GET']);
+        $this->allowedRequestMethods(['POST']);
 
         $currencyRates =  new CurrencyService();
 
