@@ -11,19 +11,25 @@ class CurrencyService
 
     public function __construct()
     {
-        $this->setCurrencyRateObj(INPUT_SOURCE);
-        $this->setExchangeRatesObjectsArray();
+        $this->setBaseCurrencyObj(INPUT_SOURCE);
+        $this->setEurExchangeRatesObjectsArray();
     }
 
 
-    private function setCurrencyRateObj($source)
+    private function setBaseCurrencyObj(string $source)
     {
-
-      $xmlRawInput =  file_get_contents($source) ;
-        if (!$xmlRawInput){
-            throw new \Exception('The file does not exists');
-        }
-        $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
+          $xmlRawInput =  file_get_contents($source) ;
+          try
+          {
+              if (!$xmlRawInput){
+                  throw new \Exception('The file does not exists');
+              }
+          }
+          catch (\Exception $e)
+          {
+              echo $e->getMessage();
+          }
+          $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
     }
 
 
@@ -33,7 +39,7 @@ class CurrencyService
     }
 
 
-    public function setExchangeRatesObjectsArray()
+    public function setEurExchangeRatesObjectsArray()
     {
         foreach ($this->inputData->children() as $currency_parity)
         {
@@ -44,21 +50,20 @@ class CurrencyService
             );
         }
         $this->exchangeRatesArrayOfObjects = $tempArray;
-
     }
 
 
-    public function getExchangeRatesObjectsArray()
+    public function getEurExchangeRatesObjectsArray() :array
     {
         return $this->exchangeRatesArrayOfObjects;
     }
 
 
-    public function getCurrencyRatesKeys()
+    public function getExchangeRatesKeys() :array
     {
-        foreach ($this->getExchangeRatesObjectsArray() as $obj)
+        foreach ($this->getEurExchangeRatesObjectsArray() as $currencyObj)
         {
-            $codes[] = $obj->currencyTo;
+            $codes[] = $currencyObj->currencyTo;
         }
         \array_unshift($codes, "EUR");
 
@@ -79,26 +84,46 @@ class CurrencyService
     }
 
 
-    public function convertTo(string $currencyCode)
+    public function convertTo(string $currencyCode) :array
     {
         if ($currencyCode == 'EUR')
         {
-            return $this->getExchangeRatesObjectsArray();
+            return $this->getEurExchangeRatesObjectsArray();
+        }
+
+        try
+        {
+            if (!in_array($currencyCode, $this->getExchangeRatesKeys()))
+            {
+                throw new \Exception('The currency code '.$currencyCode .' is not supported');
+            }
+        }
+        catch(\Exception $e)
+        {
+            print_r($e->getMessage());
         }
 
         $baseConversionRate = $this->getBaseConversionRate($currencyCode);
 
-        foreach ($this->getExchangeRatesObjectsArray() as $exchangeCodeObj)
+        foreach ($this->getEurExchangeRatesObjectsArray() as $exchangeCodeObj)
         {
             if ($exchangeCodeObj->currencyTo != $currencyCode)
             {
                 $rate = round ($exchangeCodeObj->rate / $baseConversionRate, 2);
-                $returnArray[] = new currencyEntity($currencyCode, $exchangeCodeObj->currencyTo, $rate);
+                $returnArray[] = new currencyEntity(
+                    $currencyCode,
+                    $exchangeCodeObj->currencyTo,
+                    $rate
+                );
             }
             else
             {
                 $rate = round( 1 / $exchangeCodeObj->rate, 2);
-                $returnArray[] = new currencyEntity($exchangeCodeObj->currencyTo,'EUR', $rate);
+                $returnArray[] = new currencyEntity(
+                    $exchangeCodeObj->currencyTo,
+                    'EUR',
+                    $rate
+                );
             }
         }
         return $returnArray;

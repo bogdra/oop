@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="<?=URL_ROOT?>css/bootstrap.min.css" >
         <link rel="stylesheet" href="<?=URL_ROOT?>css/custom.css" >
 
-        <title></title>
+        <title><?=$siteTitle?></title>
     </head>
 
 <body>
