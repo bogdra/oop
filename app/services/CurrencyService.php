@@ -17,7 +17,7 @@ class CurrencyService
     }
 
 
-    private function setBaseCurrencyObj(string $source) :void
+    private function setBaseCurrencyObj(string $source)
     {
           $xmlRawInput =  file_get_contents($source) ;
           try
@@ -92,6 +92,18 @@ class CurrencyService
             return $this->getEurExchangeRatesObjectsArray();
         }
 
+        try
+        {
+            if (!in_array($currencyCode, $this->getExchangeRatesKeys()))
+            {
+                throw new \Exception('The currency code '.$currencyCode .' is not supported');
+            }
+        }
+        catch(\Exception $e)
+        {
+            print_r($e->getMessage());
+        }
+
         $baseConversionRate = $this->getBaseConversionRate($currencyCode);
 
         foreach ($this->getEurExchangeRatesObjectsArray() as $exchangeCodeObj)
@@ -99,12 +111,20 @@ class CurrencyService
             if ($exchangeCodeObj->currencyTo != $currencyCode)
             {
                 $rate = round ($exchangeCodeObj->rate / $baseConversionRate, 2);
-                $returnArray[] = new currencyEntity($currencyCode, $exchangeCodeObj->currencyTo, $rate);
+                $returnArray[] = new currencyEntity(
+                    $currencyCode,
+                    $exchangeCodeObj->currencyTo,
+                    $rate
+                );
             }
             else
             {
                 $rate = round( 1 / $exchangeCodeObj->rate, 2);
-                $returnArray[] = new currencyEntity($exchangeCodeObj->currencyTo,'EUR', $rate);
+                $returnArray[] = new currencyEntity(
+                    $exchangeCodeObj->currencyTo,
+                    'EUR',
+                    $rate
+                );
             }
         }
         return $returnArray;

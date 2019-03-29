@@ -1,8 +1,6 @@
 <?php
 namespace App\Core;
 
-use mysql_xdevapi\Exception;
-
 class View
 {
     protected   $viewsPath;
@@ -26,7 +24,8 @@ class View
         (file_exists($viewPath)) ? include $viewPath : die("The view $view does not exists");
     }
 
-    public function setTitle(string $title) :void
+
+    public function setTitle(string $title)
     {
        $this->title = $title;
     }

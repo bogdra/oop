@@ -40,7 +40,7 @@ class Controller
             }
             catch (\Exception $e)
             {
-                \App\Core\H::dnd($e->getMessage());
+                print_r($e->getMessage());
             }
         }
     }
