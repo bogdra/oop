@@ -4,9 +4,9 @@ learning project
 
 Try to use :
 
-namespaces\n
-classes\n
-abstract class
-interface
-traits
-try..catch
+namespaces<br />
+classes<br />
+abstract class<br />
+interface<br />
+traits<br />
+try..catch<br />
