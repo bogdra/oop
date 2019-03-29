@@ -54,26 +54,30 @@ class CurrencyService
     }
 
 
-//    public function getCurrencyRatesKeys()
-//    {
-//        $codes = \array_keys($this->exchangeRatesArray);
-//        \array_unshift($codes, "EUR");
-//
-//        return $codes;
-//    }
+    public function getCurrencyRatesKeys()
+    {
+        foreach ($this->getExchangeRatesObjectsArray() as $obj)
+        {
+            $codes[] = $obj->currencyTo;
+        }
+        \array_unshift($codes, "EUR");
 
-    public function getBaseConversionRate(string $currencyCode)
+        return $codes;
+    }
+
+
+    public function getBaseConversionRate(string $currencyCode) :float
     {
         foreach ($this->exchangeRatesArrayOfObjects as $obj)
         {
-            print_r($obj);
-            if ($obj->currencyFrom == $currencyCode)
+            if ($obj->currencyTo == $currencyCode)
             {
                 return $obj->rate;
             }
-           // return NULL;
         }
+        return 1;
     }
+
 
     public function convertTo(string $currencyCode)
     {
@@ -82,24 +86,21 @@ class CurrencyService
             return $this->getExchangeRatesObjectsArray();
         }
 
+        $baseConversionRate = $this->getBaseConversionRate($currencyCode);
 
-        $baseConversionRate = $this->exchangeRatesArrayOfObjects[$currencyCode];
-        \Core\H::dnd($baseConversionRate);
-
-        foreach ($this->getExchangeRatesObjectsArray() as $exchangeCodeFromArray => $exchangeValue)
+        foreach ($this->getExchangeRatesObjectsArray() as $exchangeCodeObj)
         {
-            if ($exchangeCodeFromArray != $currencyCode)
+            if ($exchangeCodeObj->currencyTo != $currencyCode)
             {
-                $rate = round ($this->exchangeRatesArray[$exchangeCodeFromArray] / $baseConversionRate, 2);
-                $returnArray[] = new currencyEntity($currencyCode, $exchangeCodeFromArray, $rate);
+                $rate = round ($exchangeCodeObj->rate / $baseConversionRate, 2);
+                $returnArray[] = new currencyEntity($currencyCode, $exchangeCodeObj->currencyTo, $rate);
             }
             else
             {
-                $rate = round( 1 / $this->exchangeRatesArray[$currencyCode], 2);
-                $returnArray[] = new currencyEntity('EUR', $exchangeCodeFromArray, $rate);
+                $rate = round( 1 / $exchangeCodeObj->rate, 2);
+                $returnArray[] = new currencyEntity($exchangeCodeObj->currencyTo,'EUR', $rate);
             }
         }
-
         return $returnArray;
     }
 

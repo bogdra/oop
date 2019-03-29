@@ -1,24 +1,22 @@
 <?php
 namespace App\Controller;
 
-use App\Model\ExchangeModel;
+use App\Services\CurrencyService;
 
-class HomeController extends \App\Core\Controller
+class HomeController extends Controller
 {
-    public $currency;
-
     public function __construct()
     {
         parent::__construct();
-        $this->currency =  new ExchangeModel();
     }
 
 
    public function indexAction()
    {
-       // \Core\H::dnd($this->currency->getCurrencyRatesKeys());
+        $currency =  new CurrencyService();
+
         $params = [
-            'currencyArrayKeys' => $this->currency->getCurrencyRatesKeys()
+            'currencyArrayKeys' => $currency->getCurrencyRatesKeys()
         ];
 
         $this->view->render('home/index', $params);
