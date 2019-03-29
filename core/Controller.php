@@ -8,6 +8,7 @@ class Controller
     public $view;
     public $currentRequestMethod;
 
+
     public function __construct()
     {
         $this->view = new View();
@@ -40,7 +41,6 @@ class Controller
             {
                 \Core\H::dnd($e);
             }
-
         }
     }
 
