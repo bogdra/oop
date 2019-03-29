@@ -23,7 +23,7 @@ class Controller
      * @param array $allowedMethods
      * @throws \Exception
      */
-    public function allowedRequestMethods($allowedMethods = [])
+    public function allowedRequestMethods($allowedMethods = []) :void
     {
         foreach ($allowedMethods as $allowedMethod) {
             try

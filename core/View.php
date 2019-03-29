@@ -1,8 +1,6 @@
 <?php
 namespace App\Core;
 
-use mysql_xdevapi\Exception;
-
 class View
 {
     protected   $viewsPath;
@@ -26,6 +24,7 @@ class View
         (file_exists($viewPath)) ? include $viewPath : die("The view $view does not exists");
     }
 
+
     public function setTitle(string $title)
     {
        $this->title = $title;
@@ -36,7 +35,7 @@ class View
         return $this->title;
     }
 
-    public function getPartial(string $partialName)
+    public function getPartial(string $partialName) :void
     {
         $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
 
