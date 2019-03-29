@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 /**
  * Class H
@@ -33,5 +33,4 @@ class H
         self::dnl($variable, $variableName);
         \die();
     }
-
 }

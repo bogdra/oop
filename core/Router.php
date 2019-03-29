@@ -62,7 +62,7 @@ class Router
      * @param string $location
      * @param int $status
      */
-    public static function redirect(string $location, $status = 301)
+    public static function redirect(string $location,int $status = 301) :void
     {
             if(!headers_sent())
             {

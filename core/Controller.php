@@ -2,17 +2,18 @@
 namespace App\Controller;
 
 use \App\Core\View;
+use \App\Core\Router;
 
 class Controller
 {
     public $view;
-    public $currentRequestMethod;
+    public $requestMethodUsed;
 
 
     public function __construct()
     {
         $this->view = new View();
-        $this->currentRequestMethod = $_SERVER['REQUEST_METHOD'];
+        $this->requestMethodUsed = $_SERVER['REQUEST_METHOD'];
     }
 
 
@@ -22,7 +23,7 @@ class Controller
      * @param array $allowedMethods
      * @throws \Exception
      */
-    public function allowedRequestMethods($allowedMethods = [])
+    public function allowedRequestMethods($allowedMethods = []) :void
     {
         foreach ($allowedMethods as $allowedMethod) {
             try
@@ -32,14 +33,14 @@ class Controller
                     throw new \Exception('The selected request method is not valid');
                     break;
                 }
-                elseif ($this->currentRequestMethod != $allowedMethod)
+                elseif ($this->requestMethodUsed != $allowedMethod)
                 {
-                    throw new \Exception('The request method '.$this->currentRequestMethod.' is not supported for this route');
+                    throw new \Exception('The request method '.$this->requestMethodUsed.' is not supported for this route');
                 }
             }
             catch (\Exception $e)
             {
-                \Core\H::dnd($e);
+                \App\Core\H::dnd($e->getMessage());
             }
         }
     }
