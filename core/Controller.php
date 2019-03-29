@@ -3,30 +3,34 @@ namespace App\Core;
 
 class Controller
 {
-    public      $view;
-    protected   $controller,
-                $action;
+    public $view;
+    public $currentRequestMethod = $_SERVER['REQUEST_METHOD'];
 
     public function __construct()
     {
-        //$this->controller   = $controller;
-        //$this->action       = $action;
-        $this->view         = new \App\Core\View();
+        $this->view = new \App\Core\View();
     }
 
-    public function allowedRequestMethods($methods = [])
+    public function allowedRequestMethods($allowedMethods = [])
     {
-        $availableMethods = ['GET','POST','PUT','DELETE'];
+        foreach ($allowedMethods as $allowedMethod) {
+            try
+            {
+                if (!\in_array(\strtoupper($allowedMethod), SUPPORTED_REQUEST_METHODS))
+                {
+                    throw new \Exception('The selected request method is not valid');
+                    break;
+                }
+                elseif ($this->currentRequestMethod != $allowedMethod)
+                {
+                    throw new \Exception('The request method '.$this->currentRequestMethod.' is not supported for this route');
+                }
+            }
+            catch (\Exception $e)
+            {
+                \Core\H::dnd($e);
+            }
 
-        foreach ($methods as $method) {
-            if (!in_array(strtoupper($method), $availableMethods))
-            {
-                throw new \Exception('The selected request method is not valid');
-            }
-            if ($_SERVER['REQUEST_METHOD'] != $method)
-            {
-                die('The request method used is not supported');
-            }
         }
     }
 

@@ -15,3 +15,5 @@ define ('DB_NAME', 'oop');
 define ('DEFAULT_CONTROLLER', 'Home');
 define ('RESTRICTED_CONTROLLER', 'Restricted');
 define ('DEFAULT_ACTION', 'Index');
+
+define ('SUPPORTED_REQUEST_METHODS', ['GET', 'POST', 'PUT', 'DELETE']);
