@@ -16,10 +16,13 @@ class H
      */
     public static function dnl($variable, $variableName = '')
     {
-        echo('<pre>');
-        echo('<b>'.$variableName."</b> is  ");
+        \echo('<pre style="border:1px solid #bbba74">');
+        if ($variableName != '')
+        {
+            \echo('<b>'.$variableName."</b> is  ");
+        }
         \print_r($variable);
-        echo('</pre>');
+        \echo('</pre>');
     }
 
     /**
@@ -29,7 +32,7 @@ class H
     public static function dnd($variable, $variableName = '')
     {
         self::dnl($variable, $variableName);
-        die();
+        \die();
     }
 
 }
