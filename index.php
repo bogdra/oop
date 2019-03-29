@@ -5,7 +5,6 @@ define('ROOT', __DIR__);
 
 include_once(ROOT. DS . 'core'. DS . 'config.php');
 
-
 function autoload($className)
 {
     $classNameWithNamespaceArray = explode('\\', $className);
@@ -19,8 +18,11 @@ function autoload($className)
         include_once(ROOT. DS. 'app'. DS. 'controllers'. DS. $classFile);
     } elseif (file_exists(ROOT. DS. 'app'. DS. 'models'. DS. $classFile)) {
         include_once(ROOT. DS. 'app'. DS. 'models'. DS. $classFile);
+    } elseif (file_exists(ROOT. DS. 'app'. DS. 'entities'. DS. $classFile)) {
+        include_once(ROOT. DS. 'app'. DS. 'entities'. DS. $classFile);
+    } elseif (file_exists(ROOT. DS. 'app'. DS. 'services'. DS. $classFile)) {
+        include_once(ROOT . DS . 'app' . DS . 'services' . DS . $classFile);
     }
-
 }
 
 spl_autoload_register('autoload');

@@ -1,15 +1,15 @@
 //this function appends the json data to the table 'gable'
 function append_json(data) {
-    var temp1 = data;
-    //console.log(data);
+
     var table = document.getElementById('gable');
 
-    for (var ceva in temp1) {
+    data.forEach(function(obj) {
+
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td>' + ceva + '</td>' +
-            '<td>' + temp1[ceva] + '</td>';
+         tr.innerHTML = '<td>' + obj.currencyTo + '</td>' +
+                        '<td>' + obj.rate + '</td>';
         table.appendChild(tr);
-    }
+    });
 }
 
 //this function clears the table
@@ -23,7 +23,7 @@ function clearTable()
     }
 }
 
-//this function retrives the currency from the route
+//this function retrieves the currency from the route
 function updateCurrency($currency)
 {
     console.log($currency);
@@ -34,7 +34,6 @@ function updateCurrency($currency)
             var data = JSON.parse(this.responseText);
             clearTable();
             append_json(data);
-           // console.log(data);
         }
         else {
             alert('Request failed. Returned status of ' + xhr.status);

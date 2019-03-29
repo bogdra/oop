@@ -16,6 +16,12 @@ class Controller
     }
 
 
+    /**
+     * Checks that the request method used is in the allowed of requests
+     *
+     * @param array $allowedMethods
+     * @throws \Exception
+     */
     public function allowedRequestMethods($allowedMethods = [])
     {
         foreach ($allowedMethods as $allowedMethod) {
@@ -35,10 +41,6 @@ class Controller
             {
                 \Core\H::dnd($e);
             }
-
-
         }
     }
-
-
 }

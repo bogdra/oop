@@ -9,17 +9,16 @@ namespace Core;
  */
 class H
 {
-
     /**
      * @param $variable
      * @param string $variableName
      */
     public static function dnl($variable, $variableName = '')
     {
-        \echo('<pre style="border:1px solid #bbba74">');
+        echo('<pre style="border:1px solid #bbba74">');
         if ($variableName != '')
         {
-            \echo('<b>'.$variableName."</b> is  ");
+            echo('<b>'.$variableName.'</b> is  ');
         }
         \print_r($variable);
         \echo('</pre>');
