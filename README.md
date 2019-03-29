@@ -4,8 +4,8 @@ learning project
 
 Try to use :
 
-namespaces
-classes
+namespaces\n
+classes\n
 abstract class
 interface
 traits
