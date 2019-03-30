@@ -35,7 +35,7 @@ class View
         return $this->title;
     }
 
-    public function getPartial(string $partialName) :void
+    public function getPartial(string $partialName)
     {
         $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
 

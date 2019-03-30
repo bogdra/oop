@@ -2,7 +2,7 @@
 
 <?=$this->getPartial('header')?>
 
-<div class="container ">
+<div class="container">
     <div class="row">
         <div class="col-sm col-xs-6 ">
             <div class="card text-center">

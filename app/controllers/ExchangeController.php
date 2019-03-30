@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Services\CurrencyService;
+use App\Exception\RequestException;
 
 class ExchangeController extends Controller
 {
@@ -13,7 +14,14 @@ class ExchangeController extends Controller
 
     public function getAction(string $currency = '')
     {
-        $this->allowedRequestMethods(['POST']);
+        try
+        {
+            $this->allowedRequestMethods(['POST']);
+        }
+        catch (RequestException $e)
+        {
+           throw $e;
+        }
 
         $currencyRates =  new CurrencyService();
 
