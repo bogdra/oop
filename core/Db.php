@@ -129,7 +129,7 @@ class DB implements PersistenceInterface
         $fieldString = rtrim($fieldString, ',');
         $valueString = rtrim($valueString, ',');
         $sql = "INSERT INTO {$table} ({$fieldString}) VALUES ({$valueString})";
-        if(!$this->query($sql, $values)->error()) {
+        if($this->query($sql, $values)) {
             return true;
         }
         return false;
