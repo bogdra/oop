@@ -1,8 +1,9 @@
 <?php
 namespace App\Controller;
 
-use \App\Core\View;
+use \Core\View;
 use App\Exception\RequestException;
+use App\Exception\ViewException;
 
 class Controller
 {
@@ -12,7 +13,14 @@ class Controller
 
     public function __construct()
     {
-        $this->view = new View();
+        try
+        {
+            $this->view = new View();
+        }
+        catch (ViewException $e)
+        {
+            echo $e->getMessage();
+        }
         $this->requestMethodUsed = $_SERVER['REQUEST_METHOD'];
     }
 

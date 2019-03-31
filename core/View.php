@@ -1,5 +1,7 @@
 <?php
-namespace App\Core;
+namespace Core;
+
+use App\Exception\ViewException;
 
 class View
 {
@@ -21,7 +23,11 @@ class View
         list($controller, $action) = explode('/', $view);
         $viewPath = $this->viewsPath. DS. $controller. DS. $action. '.php';
 
-        (file_exists($viewPath)) ? include $viewPath : die("The view $view does not exists");
+        if (!file_exists($viewPath))
+        {
+            throw new ViewException("The view $view does not exists");
+        }
+        include $viewPath;
     }
 
 
@@ -39,20 +45,12 @@ class View
     {
         $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
 
-        try
+        if (!file_exists($partialFullPath))
         {
-            if (!file_exists($partialFullPath))
-            {
-                throw new \Exception("The partial html file,$partialFullPath does not exists");
-            }
-            else
-            {
-                include($partialFullPath);
-            }
+            throw new ViewException("The partial html file,$partialFullPath does not exists");
         }
-        catch (\Exception $e)
-        {
-            echo $e->getMessage();
-        }
+        include($partialFullPath);
+
+
     }
 }

@@ -2,7 +2,8 @@
 namespace App\Controller;
 
 use App\Services\CurrencyService;
-
+use Core\DB;
+use Core\H;
 
 class HomeController extends Controller
 {
@@ -14,6 +15,20 @@ class HomeController extends Controller
 
    public function indexAction()
    {
+       try
+       {
+           $db = \Core\DB::init();
+           if($db->read('eurparities', ['conditions' =>'id = 1']))
+           {
+               $db->getResult();
+           }
+       }
+       catch(\PDOException $pdoException)
+       {
+           echo($pdoException->getMessage());
+       }
+
+             H::dnd($db->result);
         $currency =  new CurrencyService();
 
         $params = [

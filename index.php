@@ -1,6 +1,6 @@
 <?php
 
-use App\Core\Router;
+use Core\Router;
 
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', __DIR__);
