@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use \Core\DB;
+use \Core\Db;
 use \App\Services\CurrencyService;
 
 class SaveController extends Controller
@@ -16,7 +16,7 @@ class SaveController extends Controller
         if ($destination == 'db')
         {
             $this->allowedRequestMethods(['GET']);
-            $db = DB::init();
+            $db = Db::init();
             $exchangeService = new CurrencyService();
             $EurParities = $exchangeService->getEurExchangeRatesObjectsArray();
             foreach ($EurParities as $eurParity)

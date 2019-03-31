@@ -4,7 +4,7 @@ namespace Core;
 
 use App\Interfaces\PersistenceInterface;
 
-class DB implements PersistenceInterface
+class Db implements PersistenceInterface
 {
     public static $instance;
     private $queryHolder;
