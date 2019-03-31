@@ -52,11 +52,12 @@ class DB implements PersistenceInterface
         {
             $this->result = $this->queryHolder->fetchAll(\PDO::FETCH_OBJ);
             $this->count = $this->queryHolder->rowCount();
+            return true;
         }
         else
         {
             $this->error = true;
-            throw new \PDOException();
+            return false;
         }
 
 
