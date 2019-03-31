@@ -33,7 +33,8 @@ class Controller
             }
             elseif ($this->requestMethodUsed != $allowedMethod)
             {
-                throw new RequestException('The request method '.$this->requestMethodUsed.' is not supported for this route');
+                throw new RequestException('The request method '.$this->requestMethodUsed.'
+                                            is not supported for this route');
             }
 
 

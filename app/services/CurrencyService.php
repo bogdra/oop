@@ -2,35 +2,31 @@
 namespace App\Services;
 
 use App\Entities\currencyEntity;
-use phpDocumentor\Reflection\Types\Object_;
+use App\Exception\FileException;
+use App\Exception\CurrencyException;
+use Core\H;
 
 class CurrencyService
 {
-
     private $inputData;
     private $exchangeRatesArrayOfObjects;
 
     public function __construct()
     {
+        $this->exchangeRatesArrayOfObjects = [];
         $this->setBaseCurrencyObj(INPUT_SOURCE);
         $this->setEurExchangeRatesObjectsArray();
     }
 
-
     private function setBaseCurrencyObj(string $source)
     {
-          $xmlRawInput =  file_get_contents($source) ;
-          try
-          {
-              if (!$xmlRawInput){
-                  throw new \Exception('The file does not exists');
-              }
-          }
-          catch (\Exception $e)
-          {
-              echo $e->getMessage();
-          }
-          $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
+
+        if (!H::remoteFileExists($source))
+        {
+            throw new FileException('The file does not exists');
+        }
+         $xmlRawInput = file_get_contents($source);
+         $this->inputData = $this->convertXmlToObj($xmlRawInput)->Cube->Cube;
     }
 
 
@@ -42,6 +38,7 @@ class CurrencyService
 
     public function setEurExchangeRatesObjectsArray()
     {
+       // H::dnd($this->inputData);
         foreach ($this->inputData->children() as $currency_parity)
         {
             $tempArray[] = new currencyEntity(
@@ -62,9 +59,10 @@ class CurrencyService
 
     public function getExchangeRatesKeys() :array
     {
+        $codes = [];
         foreach ($this->getEurExchangeRatesObjectsArray() as $currencyObj)
         {
-            $codes[] = $currencyObj->currencyTo;
+            $codes[] = $currencyObj->getCurrencyTo();
         }
         \array_unshift($codes, "EUR");
 
@@ -76,9 +74,9 @@ class CurrencyService
     {
         foreach ($this->exchangeRatesArrayOfObjects as $obj)
         {
-            if ($obj->currencyTo == $currencyCode)
+            if ($obj->getCurrencyTo() == $currencyCode)
             {
-                return $obj->rate;
+                return $obj->getRate();
             }
         }
         return 1;
@@ -87,41 +85,33 @@ class CurrencyService
 
     public function convertTo(string $currencyCode) :array
     {
+        if (!in_array($currencyCode, $this->getExchangeRatesKeys()))
+        {
+            throw new CurrencyException('The currency code '.$currencyCode .' is not supported');
+        }
         if ($currencyCode == 'EUR')
         {
             return $this->getEurExchangeRatesObjectsArray();
-        }
-
-        try
-        {
-            if (!in_array($currencyCode, $this->getExchangeRatesKeys()))
-            {
-                throw new \Exception('The currency code '.$currencyCode .' is not supported');
-            }
-        }
-        catch(\Exception $e)
-        {
-            print_r($e->getMessage());
         }
 
         $baseConversionRate = $this->getBaseConversionRate($currencyCode);
 
         foreach ($this->getEurExchangeRatesObjectsArray() as $exchangeCodeObj)
         {
-            if ($exchangeCodeObj->currencyTo != $currencyCode)
+            if ($exchangeCodeObj->getCurrencyTo() != $currencyCode)
             {
-                $rate = round ($exchangeCodeObj->rate / $baseConversionRate, 2);
+                $rate = round ($exchangeCodeObj->getRate() / $baseConversionRate, 2);
                 $returnArray[] = new currencyEntity(
                     $currencyCode,
-                    $exchangeCodeObj->currencyTo,
+                    $exchangeCodeObj->getCurrencyTo(),
                     $rate
                 );
             }
             else
             {
-                $rate = round( 1 / $exchangeCodeObj->rate, 2);
+                $rate = round( 1 / $exchangeCodeObj->getRate(), 2);
                 $returnArray[] = new currencyEntity(
-                    $exchangeCodeObj->currencyTo,
+                    $exchangeCodeObj->getCurrencyTo(),
                     'EUR',
                     $rate
                 );

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace Core;
 
 /**
  * Class H
@@ -33,4 +33,22 @@ class H
         self::dnl($variable, $variableName);
         die();
     }
+
+    /**
+     * Checks with get_headers that the file exists
+     * @param string $fileUrl
+     * @return bool
+     */
+    public static function remoteFileExists(string $fileUrl): bool
+    {
+       $headersArray = get_headers($fileUrl);
+       if (substr($headersArray[0], 9, 3) != '200')
+       {
+           return false;
+       }
+       return true;
+
+    }
 }
+
+
