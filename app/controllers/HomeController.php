@@ -1,13 +1,9 @@
 <?php
 namespace App\Controller;
 
-<<<<<<< HEAD
 use App\Model\ExchangeModel;
 
 class HomeController extends \App\Core\Controller
-=======
-class HomeController extends Controller
->>>>>>> d278e90a4b5cfd1427ad7264218375a74fa07bff
 {
     public $currency;
 
