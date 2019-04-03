@@ -2,8 +2,9 @@
 namespace App\Controller;
 
 use \Core\View;
-use App\Exception\RequestException;
-use App\Exception\ViewException;
+use \App\Exception\RequestException;
+use \App\Exception\ViewException;
+use \App\Exception\StatusCodeException;
 
 class Controller
 {
@@ -47,6 +48,29 @@ class Controller
 
 
         }
+    }
+
+    public function jsonResponse(array $data, int $status = 200, $message = '')
+    {
+
+        if (!in_array($status, [200, 301, 302, 404, 500]))
+        {
+            throw new StatusCodeException('The provided Status code '.$status.' is not supported');
+        }
+
+        if (!headers_sent())
+        {
+            \header("Access-Control-Allow-Origin: *");
+            \header("Content-Type: application/json; charset=UTF-8");
+            \http_response_code($status);
+            return \json_encode([
+                'status' => $status,
+                'message' => $message,
+                'data' => $data
+            ]);
+        }
+
+        throw new \Exception('The headers have already been sent');
     }
 
 }

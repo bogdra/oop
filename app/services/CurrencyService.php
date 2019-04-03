@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Entities\currencyEntity;
+use App\Entities\CurrencyEntity;
 use App\Exception\FileException;
 use App\Exception\CurrencyException;
 use Core\H;
