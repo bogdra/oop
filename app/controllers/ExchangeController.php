@@ -20,7 +20,7 @@ class ExchangeController extends Controller
         try
         {
             $this->allowedRequestMethods(['GET']);
-            $currencyObj = new CurrencyService($currency);
+            $currencyObj =  new CurrencyService($currency);
         }
         catch (RequestException $requestException)
         {
