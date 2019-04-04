@@ -6,6 +6,7 @@ use App\Exception\CurrencyException;
 use App\Exception\RequestException;
 use App\Exception\FileException;
 
+
 class ExchangeController extends Controller
 {
     public function __construct()
@@ -19,20 +20,7 @@ class ExchangeController extends Controller
         try
         {
             $this->allowedRequestMethods(['GET']);
-            $currencyRates =  new CurrencyService();
-
-            foreach ($currencyRates->convertTo($currency) as $obj)
-            {
-                $tempCurrencyArray['currencyFrom'] = $obj->getCurrencyFrom();
-                $tempCurrencyArray['currencyTo'] = $obj->getCurrencyTo();
-                $tempCurrencyArray['rate'] = $obj->getRate();
-                $tempObjectArray[] = (object)$tempCurrencyArray;
-            }
-            print_r(json_encode($tempObjectArray));
-        }
-        catch(FileException $fileException)
-        {
-            echo $fileException->getMessage();
+            $currencyObj =  new CurrencyService($currency);
         }
         catch (RequestException $requestException)
         {
@@ -40,8 +28,14 @@ class ExchangeController extends Controller
         }
         catch (CurrencyException $currencyException)
         {
-            echo  $currencyException->getMessage();
+            echo $currencyException->getMessage();
         }
+        catch (FileException $fileException)
+        {
+            echo $fileException->getMessage();
+        }
+
+        print_r(json_encode($currencyObj->toArray()));
 
     }
 }

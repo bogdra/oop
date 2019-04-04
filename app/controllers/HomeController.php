@@ -14,6 +14,7 @@ class HomeController extends Controller
    public function indexAction()
    {
         $currency =  new CurrencyService();
+        //var_dump($currency);
 
         $params = [
             'currencyArrayKeys' => $currency->getExchangeRatesKeys()
