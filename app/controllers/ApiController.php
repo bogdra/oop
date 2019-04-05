@@ -57,7 +57,10 @@ class ApiController extends Controller
             {
                $found = true;
                $answer = $currencyObj['rate'] * (float)$currencyValue;
-               $this->apiService->setResponse($answer);
+               $this->apiService->setResponse([
+                   "rate" => $currencyObj['rate'],
+                   "value" => $answer
+               ]);
                print_r($this->apiService->jsonResponse());
                break;
             }
