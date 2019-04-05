@@ -12,20 +12,14 @@ function autoload($className)
     $classNameWithNamespaceArray = explode('\\', $className);
     $classFile = array_pop($classNameWithNamespaceArray).'.php';
 
-    if (file_exists(ROOT. DS. 'interfaces'. DS. $classFile)){
-        include_once(ROOT. DS. 'interfaces'. DS. $classFile);
-    } elseif (file_exists(ROOT. DS. 'core'. DS. $classFile)) {
-        include_once(ROOT. DS. 'core'. DS. $classFile);
-    } elseif (file_exists(ROOT. DS. 'app'. DS. 'controllers'. DS. $classFile)) {
-        include_once(ROOT. DS. 'app'. DS. 'controllers'. DS. $classFile);
-    } elseif (file_exists(ROOT. DS. 'app'. DS. 'models'. DS. $classFile)) {
-        include_once(ROOT. DS. 'app'. DS. 'models'. DS. $classFile);
-    } elseif (file_exists(ROOT. DS. 'app'. DS. 'entities'. DS. $classFile)) {
-        include_once(ROOT. DS. 'app'. DS. 'entities'. DS. $classFile);
-    } elseif (file_exists(ROOT. DS. 'app'. DS. 'services'. DS. $classFile)) {
-        include_once(ROOT . DS . 'app' . DS . 'services' . DS . $classFile);
-    } elseif (file_exists(ROOT. DS. 'app'. DS. 'exceptions'. DS. $classFile)) {
-        include_once(ROOT . DS . 'app' . DS . 'exceptions' . DS . $classFile);
+    foreach(ROUTES as $route)
+    {
+        $route = ROOT .DS.str_replace('/', DS, $route). $classFile;
+        if (file_exists($route))
+        {
+            include_once($route);
+            break;
+        }
     }
 }
 

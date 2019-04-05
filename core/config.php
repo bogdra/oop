@@ -23,3 +23,15 @@ define ('RESTRICTED_CONTROLLER', 'Restricted');
 define ('DEFAULT_ACTION', 'Index');
 
 define ('SUPPORTED_REQUEST_METHODS', ['GET', 'POST', 'PUT', 'DELETE']);
+
+// Routes
+define ('ROUTES',
+[
+    'interfaces/',
+    'core/',
+    'app/controllers/',
+    'app/models/',
+    'app/entities/',
+    'app/services/',
+    'app/exceptions/'
+]);
