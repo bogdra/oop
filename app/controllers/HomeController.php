@@ -13,11 +13,11 @@ class HomeController extends Controller
 
    public function indexAction()
    {
-        $currency =  new CurrencyService();
-        //var_dump($currency);
+        $currencyService =  new CurrencyService();
+        $this->view->setTitle('Homepage');
 
         $params = [
-            'currencyArrayKeys' => $currency->getExchangeRatesKeys()
+            'currencyArrayKeys' => $currencyService->getExchangeRatesKeys()
         ];
 
         $this->view->render('home/index', $params);
