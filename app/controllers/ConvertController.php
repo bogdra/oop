@@ -1,68 +1,58 @@
 <?php
 namespace App\Controller;
 
-use App\Exception\CurrencyException;
-use \Core\H;
 use \App\Services\CurrencyService;
+use \App\Services\ApiService;
 
 
 
 class ConvertController extends Controller
 {
-
-
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function indexAction()
-    {
-        $params = $_GET;
-        H::dnd($params);
-    }
 
     public function fromAction($currencyFrom, $action1, $currencyTo, $action2, $value)
     {
-
-
         $this->allowedRequestMethods(['GET']);
         $params = func_get_args();
-       // H::dnd( $params);
 
-        if ( count($params) != 5 )
+        if (count($params) != 5)
         {
-            throw new \Exception('Wrong Format');
+            $response = new ApiService('You do not have the right number of elements in the route', 405);
+            return $response->jsonResponse();
+        }
+        else
+        {
+            list($fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
         }
 
-        if (strtolower($params[1])  != 'to')
+        if (strtolower($to)  != 'to')
         {
-            throw new \Exception('Missing \"To\" keyword ');
+            $response = new ApiService('Missing to keyword from route', 405);
+            return $response->jsonResponse();
+        }
+        if (strtolower($value)  != 'value')
+        {
+            $response = new ApiService('Missing value keyword from route', 405);
+            return $response->jsonResponse();
         }
 
-        if (strtolower($params[3])  != 'value')
-        {
-            throw new \Exception('Missing Value keyword ');
-        }
-
-        $fromCurrency = strtoupper($params[0]);
-        $toCurrency = strtoupper($params[2]);
-        $value = (float)$params[4];
-
-        $currencyService = new CurrencyService($fromCurrency);
-
+        $currencyService = new CurrencyService(strtoupper($fromCurrency));
         foreach ($currencyService->toArray() as $currencyObj)
         {
-           if ($currencyObj['currencyTo'] == $toCurrency)
+           if ($currencyObj['currencyTo'] == strtoupper($toCurrency))
            {
-               $answer = $currencyObj['rate'] * $value;
-                break;
+               $answer = $currencyObj['rate'] * (float)$currencyValue;
+               $response = new ApiService($answer);
+               return $response->jsonResponse();
            }
-
         }
 
-
-       // H::dnd($currencyService->toArray());
-
+        $response = new ApiService('',204);
+        return $response->jsonResponse();
     }
 }
+
