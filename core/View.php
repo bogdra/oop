@@ -1,11 +1,20 @@
 <?php
-namespace App\Core;
+namespace Core;
+
+use App\Exception\ViewException;
 
 class View
 {
-    protected   $viewsPath = ROOT. DS. 'app'. DS. 'views',
-                $siteTitle = SITE_TITLE,
-                $params;
+    protected   $viewsPath;
+    protected   $title;
+    public      $params;
+
+
+    public function __construct()
+    {
+        $this->viewsPath = ROOT. DS. 'app'. DS. 'views';
+        $this->title = SITE_TITLE;
+    }
 
     public function render(string $view, $params = [] )
     {
@@ -14,22 +23,34 @@ class View
         list($controller, $action) = explode('/', $view);
         $viewPath = $this->viewsPath. DS. $controller. DS. $action. '.php';
 
-        (file_exists($viewPath)) ? include $viewPath : die("The view $view does not exists");
-
+        if (!file_exists($viewPath))
+        {
+            throw new ViewException("The view $view does not exists");
+        }
+        include $viewPath;
     }
 
-    public function getSiteTitle() :string
+
+    public function setTitle(string $title)
     {
-        echo 'Exercitiu Leu';
+       $this->title = $title;
     }
+
+
+    public function getTitle() :string
+    {
+        return $this->title;
+    }
+
 
     public function getPartial(string $partialName)
     {
         $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
 
-        if (file_exists($partialFullPath)) {
-            include($partialFullPath);
+        if (!file_exists($partialFullPath))
+        {
+            throw new ViewException("The partial html file,$partialFullPath does not exists");
         }
-
+        include($partialFullPath);
     }
 }

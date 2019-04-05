@@ -1,34 +1,53 @@
 <?php
-namespace App\Core;
+namespace App\Controller;
+
+use \Core\View;
+use \App\Entities\ApiResponseEntity;
+use \App\Exception\RequestException;
+use \App\Exception\ViewException;
+use \App\Exception\StatusCodeException;
 
 class Controller
 {
-    public      $view;
-    protected   $controller,
-                $action;
+    public $view;
+    public $requestMethodUsed;
+
 
     public function __construct()
     {
-        //$this->controller   = $controller;
-        //$this->action       = $action;
-        $this->view         = new \App\Core\View();
+        try
+        {
+            $this->view = new View();
+        }
+        catch (ViewException $e)
+        {
+            echo $e->getMessage();
+        }
+        $this->requestMethodUsed = $_SERVER['REQUEST_METHOD'];
     }
 
-    public function allowedRequestMethods($methods = [])
+    /**
+     * Checks that the request method used is in the allowed of requests
+     *
+     * @param array $allowedMethods
+     * @throws \App\Exception\RequestException
+     */
+    public function allowedRequestMethods($allowedMethods = [])
     {
-        $availableMethods = ['GET','POST','PUT','DELETE'];
+        foreach ($allowedMethods as $allowedMethod)
+        {
+            if (!\in_array(\strtoupper($allowedMethod), SUPPORTED_REQUEST_METHODS))
+            {
+                throw new RequestException('The selected request method is not valid');
+                break;
+            }
+            elseif ($this->requestMethodUsed != $allowedMethod)
+            {
+                throw new RequestException('The request method '.$this->requestMethodUsed.'
+                                            is not supported for this route');
+            }
 
-        foreach ($methods as $method) {
-            if (!in_array(strtoupper($method), $availableMethods))
-            {
-                throw new \Exception('The selected request method is not valid');
-            }
-            if ($_SERVER['REQUEST_METHOD'] != $method)
-            {
-                die('The request method used is not supported');
-            }
+
         }
     }
-
-
 }

@@ -1,20 +1,24 @@
 <?php
 namespace App\Controller;
 
-class HomeController extends \App\Core\Controller
+use App\Services\CurrencyService;
+
+class HomeController extends Controller
 {
     public function __construct()
     {
         parent::__construct();
     }
 
+
    public function indexAction()
    {
-        $params = [
-            'falcuta'=>'test',
-            'radu'=>'frumos'
-        ];
+       $this->view->setTitle('Homepage');
+       $currency =  new CurrencyService();
 
-        $this->view->render('home/index', $params);
+       $params = [
+           'currencyArrayKeys' => $currency->getExchangeRatesKeys()
+       ];
+       $this->view->render('home/index', $params);
    }
 }

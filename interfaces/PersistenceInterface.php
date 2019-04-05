@@ -2,14 +2,11 @@
 
 namespace App\Interfaces;
 
-/**
- * Interface PersistenceInterface
- */
-interface PersistenceInterface extends  \Countable
-{
-    public function read();
-    public function insert();
-    public function delete();
-    public function update();
+interface PersistenceInterface extends \Countable
 
+{
+    public function read(string $tableName , $params = []);
+    public function insert(string $tableName , $params = []);
+    public function delete(string $tableName, int $id);
+    public function update(string $tableName, int $id, $fields = []);
 }
