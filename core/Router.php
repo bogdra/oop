@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace Core;
 
 class Router
 {
@@ -62,7 +62,7 @@ class Router
      * @param string $location
      * @param int $status
      */
-    public static function redirect(string $location,int $status = 301) :void
+    public static function redirect(string $location,int $status = 301)
     {
             if(!headers_sent())
             {

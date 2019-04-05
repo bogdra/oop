@@ -1,8 +1,11 @@
 <?php
 namespace App\Controller;
 
-use \App\Core\View;
-use \App\Core\Router;
+use \Core\View;
+use \App\Entities\ApiResponseEntity;
+use \App\Exception\RequestException;
+use \App\Exception\ViewException;
+use \App\Exception\StatusCodeException;
 
 class Controller
 {
@@ -12,36 +15,39 @@ class Controller
 
     public function __construct()
     {
-        $this->view = new View();
+        try
+        {
+            $this->view = new View();
+        }
+        catch (ViewException $e)
+        {
+            echo $e->getMessage();
+        }
         $this->requestMethodUsed = $_SERVER['REQUEST_METHOD'];
     }
-
 
     /**
      * Checks that the request method used is in the allowed of requests
      *
      * @param array $allowedMethods
-     * @throws \Exception
+     * @throws \App\Exception\RequestException
      */
-    public function allowedRequestMethods($allowedMethods = []) :void
+    public function allowedRequestMethods($allowedMethods = [])
     {
-        foreach ($allowedMethods as $allowedMethod) {
-            try
+        foreach ($allowedMethods as $allowedMethod)
+        {
+            if (!\in_array(\strtoupper($allowedMethod), SUPPORTED_REQUEST_METHODS))
             {
-                if (!\in_array(\strtoupper($allowedMethod), SUPPORTED_REQUEST_METHODS))
-                {
-                    throw new \Exception('The selected request method is not valid');
-                    break;
-                }
-                elseif ($this->requestMethodUsed != $allowedMethod)
-                {
-                    throw new \Exception('The request method '.$this->requestMethodUsed.' is not supported for this route');
-                }
+                throw new RequestException('The selected request method is not valid');
+                break;
             }
-            catch (\Exception $e)
+            elseif ($this->requestMethodUsed != $allowedMethod)
             {
-                print_r($e->getMessage());
+                throw new RequestException('The request method '.$this->requestMethodUsed.'
+                                            is not supported for this route');
             }
+
+
         }
     }
 }

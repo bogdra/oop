@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Services\CurrencyService;
-use App\Controller;
 
 class HomeController extends Controller
 {
