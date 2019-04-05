@@ -17,7 +17,7 @@ class SaveController extends Controller
         switch ($destination)
         {
             case 'db':
-                $this->allowedRequestMethods(['GET']);
+
                 $db = Db::init();
                 $exchangeService = new CurrencyService();
                 $EurParities = $exchangeService->getEurExchangeRatesObjectsArray();
@@ -38,8 +38,6 @@ class SaveController extends Controller
                 break;
             default:
                 echo "Please specify where to save the info";
-
         }
-
     }
 }

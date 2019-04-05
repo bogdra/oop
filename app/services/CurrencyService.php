@@ -24,13 +24,15 @@ class CurrencyService
     }
 
 
-    private function checkCurrencyCodeInArrayOfAvailableCurrencies(string $currency)
+    public function checkCurrencyCodeInArrayOfAvailableCurrencies(array $currencies)
     {
-        if (!in_array($currency, $this->getExchangeRatesKeys()))
+        foreach ($currencies as $currency)
         {
-            throw new CurrencyException('the given Currency is not present in the array currencies');
+            if (!in_array(strtoupper($currency), $this->getExchangeRatesKeys()))
+            {
+                throw new CurrencyException('the given Currency is not present in the array currencies');
+            }
         }
-        return true;
     }
 
 

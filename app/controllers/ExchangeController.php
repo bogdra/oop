@@ -26,14 +26,6 @@ class ExchangeController extends Controller
         {
             echo $requestException->getMessage();
         }
-        catch (CurrencyException $currencyException)
-        {
-            echo $currencyException->getMessage();
-        }
-        catch (FileException $fileException)
-        {
-            echo $fileException->getMessage();
-        }
 
         print_r(json_encode($currencyObj->toArray()));
 
