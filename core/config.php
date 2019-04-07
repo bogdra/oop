@@ -2,6 +2,10 @@
 
 namespace Core;
 
+
+// Debug mode
+define ('DEBUG', false);
+
 // Site title
 define ('SITE_TITLE', 'OOP');
 
@@ -23,7 +27,6 @@ define ('RESTRICTED_CONTROLLER', 'Restricted');
 define ('DEFAULT_ACTION', 'Index');
 
 define ('SUPPORTED_REQUEST_METHODS', ['GET', 'POST', 'PUT', 'DELETE']);
-
 
 // Routes
 define ('ROUTES',

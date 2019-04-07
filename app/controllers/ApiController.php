@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Controller;
 
-use App\Exception\CurrencyException;
-use App\Exception\RequestException;
+use \App\Exception\CurrencyException;
+use \App\Exception\RequestException;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
+use \Core\Router;
 
 class ApiController extends Controller
 {
@@ -21,54 +23,35 @@ class ApiController extends Controller
      */
     public function convertAction()
     {
-        try
-        {
+        try {
             $this->allowedRequestMethods(['GET']);
             $params = func_get_args();
-            $this->apiService->hasRightNumberOfParameters($params, 6);
-
-            foreach(['from', 'to', 'value'] as $keyword)
-            {
-                $this->apiService->hasRightKeywordInRoute($params, $keyword);
-            }
-        }
-        catch (RequestException $requestException)
-        {
-            echo $requestException->getMessage();
+            Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
+        } catch (RequestException $requestException) {
+            echo $requestException->getCustomMessage();
         }
 
         list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
 
         $currencyService = new CurrencyService(strtoupper($fromCurrency));
-         try
-         {
-             $currencyService->checkCurrencyCodeInArrayOfAvailableCurrencies([$fromCurrency, $toCurrency]);
-         }
-         catch (CurrencyException $currencyException)
-         {
-             echo $currencyException->getMessage();
-         }
+        try {
+            $currencyService->checkCurrenciesCodeInArrayOfAvailableCurrencies([$fromCurrency, $toCurrency]);
+        } catch (CurrencyException $currencyException) {
+            echo $currencyException->getCustomMessage();
+        }
 
-
-        foreach ($currencyService->toArray() as $currencyObj)
-        {
-            $found = false;
-            if ($currencyObj['currencyTo'] == strtoupper($toCurrency))
-            {
-               $found = true;
-               $answer = $currencyObj['rate'] * (float)$currencyValue;
-               $this->apiService->setResponse($answer);
-               print_r($this->apiService->jsonResponse());
-               break;
+        foreach ($currencyService->toArray() as $currencyObj) {
+            if ($currencyObj['currencyTo'] == strtoupper($toCurrency)) {
+                $answer = $currencyObj['rate'] * (float)$currencyValue;
+                $this->apiService->setResponse(
+                    [
+                        'ConvertedValue' => $answer,
+                        'ConversionRate' => $currencyObj['rate']
+                    ]
+                );
+                print_r($this->apiService->jsonResponse());
+                break;
             }
         }
-
-        if ($found == false)
-        {
-            $this->apiService->setResponse('',204);
-            print_r($this->apiService->jsonResponse());
-        }
-
     }
 }
-
