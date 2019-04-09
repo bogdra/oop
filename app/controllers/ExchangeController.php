@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Services\CurrencyService;
@@ -17,13 +18,10 @@ class ExchangeController extends Controller
 
     public function getAction(string $currency = '')
     {
-        try
-        {
+        try {
             $this->allowedRequestMethods(['GET']);
-            $currencyObj =  new CurrencyService($currency);
-        }
-        catch (RequestException $requestException)
-        {
+            $currencyObj = new CurrencyService($currency);
+        } catch (RequestException $requestException) {
             echo $requestException->getMessage();
         }
 
