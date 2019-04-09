@@ -29,36 +29,31 @@ class ApiController extends Controller
             $this->allowedRequestMethods(['GET']);
             $params = func_get_args();
             Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
+            list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
+
+            $currencyService = new CurrencyService(strtoupper($fromCurrency));
+            $currencyService->checkCurrenciesCodeInArrayOfAvailableCurrencies([$fromCurrency, $toCurrency]);
+
+            foreach ($currencyService->toArray() as $currencyObj) {
+                if ($currencyObj['currencyTo'] == strtoupper($toCurrency)) {
+                    $answer = $currencyObj['rate'] * (float)$currencyValue;
+                    $this->apiService->setResponse(
+                        'success', [
+                            'ConvertedValue' => $answer,
+                            'ConversionRate' => $currencyObj['rate']
+                        ]
+                    );
+                    print_r($this->apiService->jsonResponse());
+                    break;
+                }
+            }
+
         } catch (RequestException $requestException) {
             echo $requestException->getApiMessage();
-            return; // Este nevoie de el aici, pentru a oprii executia ???
-        }
-
-        list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
-
-        $currencyService = new CurrencyService(strtoupper($fromCurrency));
-        try {
-            $currencyService->checkCurrenciesCodeInArrayOfAvailableCurrencies([$fromCurrency, $toCurrency]);
         } catch (CurrencyException $currencyException) {
-            echo $currencyException->getCustomMessage();
-        }
-
-        if (ErrorService::getErrorsCount() != 0) {
-            return;
-        }
-
-        foreach ($currencyService->toArray() as $currencyObj) {
-            if ($currencyObj['currencyTo'] == strtoupper($toCurrency)) {
-                $answer = $currencyObj['rate'] * (float)$currencyValue;
-                $this->apiService->setResponse(
-                    'success',[
-                        'ConvertedValue' => $answer,
-                        'ConversionRate' => $currencyObj['rate']
-                    ]
-                );
-                print_r($this->apiService->jsonResponse());
-                break;
-            }
+            echo $currencyException->getApiMessage();
+        } catch (\Throwable $e) {
+            echo $e->getMessage();
         }
     }
 }

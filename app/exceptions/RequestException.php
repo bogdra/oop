@@ -4,25 +4,20 @@ namespace App\Exception;
 
 use \App\Traits\DebugException;
 use \App\Services\ErrorService;
+use \App\Services\ApiService;
 
 class RequestException extends \Exception
 {
     public function getCustomMessage()
     {
         ErrorService::setError($this->getMessage());
-        if (DEBUG) {
-            return ('Generic ' . get_class($this) . ' Error');
-        }
-        return $this->getMessage();
+        return (DEBUG) ? 'Generic ' . get_class($this) . ' Error' : $this->getMessage();
     }
 
     public function getApiMessage()
     {
-        ErrorService::setError($this->getMessage());
-        $message = (DEBUG) ? 'There was a problem with the request' : $this->getMessage();
-
-        $apiService =  new \App\Services\ApiService();
-        $apiService->setResponse('fail', '', $message );
+        $apiService = new ApiService();
+        $apiService->setResponse('fail', '', $this->getCustomMessage());
         return $apiService->jsonResponse();
     }
 }

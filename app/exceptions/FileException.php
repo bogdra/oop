@@ -3,15 +3,20 @@
 namespace App\Exception;
 
 use \App\Services\ErrorService;
+use \App\Services\ApiService;
 
 class FileException extends \Exception
 {
-    public function customGetMessage()
+    public function getCustomMessage()
     {
         ErrorService::setError($this->getMessage());
-        if (DEBUG) {
-            return ('Generic ' . get_class($this) . ' Error');
-        }
-        return $this->getMessage();
+        return (DEBUG) ? 'Generic ' . get_class($this) . ' Error' : $this->getMessage();
+    }
+
+    public function getApiMessage()
+    {
+        $apiService = new ApiService();
+        $apiService->setResponse('fail', '', $this->getCustomMessage());
+        return $apiService->jsonResponse();
     }
 }
