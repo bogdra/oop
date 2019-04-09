@@ -16,7 +16,7 @@ class ErrorService
         return self::$errors;
     }
 
-    public function getErrorsCount()
+    public static function getErrorsCount()
     {
         return count(self::$errors);
     }

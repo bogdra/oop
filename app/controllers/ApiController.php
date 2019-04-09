@@ -6,6 +6,7 @@ use \App\Exception\CurrencyException;
 use \App\Exception\RequestException;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
+use \App\Services\ErrorService;
 use \Core\Router;
 
 class ApiController extends Controller
@@ -23,12 +24,14 @@ class ApiController extends Controller
      */
     public function convertAction()
     {
+
         try {
             $this->allowedRequestMethods(['GET']);
             $params = func_get_args();
             Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
         } catch (RequestException $requestException) {
-            echo $requestException->getCustomMessage();
+            echo $requestException->getApiMessage();
+            return; // Este nevoie de el aici, pentru a oprii executia ???
         }
 
         list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
@@ -40,11 +43,15 @@ class ApiController extends Controller
             echo $currencyException->getCustomMessage();
         }
 
+        if (ErrorService::getErrorsCount() != 0) {
+            return;
+        }
+
         foreach ($currencyService->toArray() as $currencyObj) {
             if ($currencyObj['currencyTo'] == strtoupper($toCurrency)) {
                 $answer = $currencyObj['rate'] * (float)$currencyValue;
                 $this->apiService->setResponse(
-                    [
+                    'success',[
                         'ConvertedValue' => $answer,
                         'ConversionRate' => $currencyObj['rate']
                     ]

@@ -3,13 +3,15 @@ namespace App\Entities;
 
 class ApiResponseEntity
 {
-    private $responseCode;
+    private $status;
     private $message;
+    private $data;
 
-    public function __construct($message = '', $responseCode = 200)
+    public function __construct($status, $data = '', $message = '')
     {
         $this->message = $message;
-        $this->responseCode = $responseCode;
+        $this->status = $status;
+        $this->data = $data;
     }
 
     public function getMessage()
@@ -17,8 +19,13 @@ class ApiResponseEntity
         return $this->message;
     }
 
-    public function getResponseCode()
+    public function getStatus()
     {
-        return $this->responseCode;
+        return $this->status;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 }

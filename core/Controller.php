@@ -2,10 +2,8 @@
 namespace App\Controller;
 
 use \Core\View;
-use \App\Entities\ApiResponseEntity;
 use \App\Exception\RequestException;
 use \App\Exception\ViewException;
-use \App\Exception\StatusCodeException;
 
 class Controller
 {

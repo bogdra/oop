@@ -1,40 +1,58 @@
 <?php
+
 namespace App\Services;
 
-use App\Exception\StatusCodeException;
-use App\Exception\RequestException;
 use App\Entities\ApiResponseEntity;
 
 class ApiService
 {
     private $response;
 
-    public function __construct()
+    public function setResponse($status, $data = '', $message = '')
     {
+        $this->response = new ApiResponseEntity(\strtolower($status), $data, $message);
     }
 
-    public function setResponse($message, int $statusCode = 200)
+    private function getResponse()
     {
-        $this->response = new ApiResponseEntity($message, $statusCode);
+        $response = [];
+        switch (strtolower($this->response->getStatus())) {
+            case 'success':
+                $response = [
+                    'status' => $this->response->getStatus(),
+                    'data' => $this->response->getData()
+                ];
+                break;
+            case 'fail':
+                $response = [
+                    'status' => $this->response->getStatus(),
+                    'data' => $this->response->getMessage()
+                ];
+                break;
+            case 'error':
+                $response = [
+                    'status' => $this->response->getStatus(),
+                    'message' => $this->response->getMessage()
+                ];
+                break;
+            default:
+                throw new \Exception('The status code is not recognised.');
+        }
+
+        return $response;
     }
 
     public function jsonResponse()
     {
-        if (!headers_sent())
-        {
+        if (!headers_sent()) {
             \header("Access-Control-Allow-Origin: *");
             \header("Content-Type: application/json; charset=UTF-8");
+            \http_response_code(200);
 
-            \http_response_code($this->response->getResponseCode());
-
-            return json_encode([
-                'status' => 'OK',
-                'message' => $this->response->getMessage()
-            ]);
+            return json_encode($this->getResponse());
         }
         return 'Headers already sent';
     }
-
 
 
 }
