@@ -16,9 +16,8 @@ class H
     public static function dnl($variable, $variableName = '')
     {
         echo('<pre style="border:1px solid #bbba74">');
-        if ($variableName != '')
-        {
-            echo('<b>'.$variableName.'</b> is  ');
+        if ($variableName != '') {
+            echo('<b>' . $variableName . '</b> is  ');
         }
         \print_r($variable);
         echo('</pre>');
@@ -41,12 +40,11 @@ class H
      */
     public static function remoteFileExists(string $fileUrl): bool
     {
-       $headersArray = get_headers($fileUrl);
-       if (substr($headersArray[0], 9, 3) != '200')
-       {
-           return false;
-       }
-       return true;
+        $headersArray = get_headers($fileUrl);
+        if (substr($headersArray[0], 9, 3) != '200') {
+            return false;
+        }
+        return true;
 
     }
 }

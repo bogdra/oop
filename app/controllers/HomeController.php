@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Services\CurrencyService;
@@ -11,9 +12,9 @@ class HomeController extends Controller
     }
 
 
-   public function indexAction()
-   {
-        $currencyService =  new CurrencyService();
+    public function indexAction()
+    {
+        $currencyService = new CurrencyService();
         $this->view->setTitle('Homepage');
 
         $params = [
@@ -21,5 +22,5 @@ class HomeController extends Controller
         ];
 
         $this->view->render('home/index', $params);
-   }
+    }
 }
