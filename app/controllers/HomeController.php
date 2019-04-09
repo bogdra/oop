@@ -14,6 +14,7 @@ class HomeController extends Controller
 
     public function indexAction()
     {
+
         $this->view->setTitle('Homepage');
         $currency = new CurrencyService();
 
