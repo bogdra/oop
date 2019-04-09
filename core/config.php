@@ -2,6 +2,10 @@
 
 namespace Core;
 
+
+// Debug mode
+define ('DEBUG', false);
+
 // Site title
 define ('SITE_TITLE', 'OOP');
 
@@ -14,7 +18,7 @@ define ('INPUT_SOURCE', 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-dai
 // DB credentials
 define ('DB_HOST', 'localhost');
 define ('DB_USER', 'root');
-define ('DB_PASS', '');
+define ('DB_PASS', 'nuesteasta10');
 define ('DB_NAME', 'oop');
 
 // Default Controllers
@@ -23,3 +27,15 @@ define ('RESTRICTED_CONTROLLER', 'Restricted');
 define ('DEFAULT_ACTION', 'Index');
 
 define ('SUPPORTED_REQUEST_METHODS', ['GET', 'POST', 'PUT', 'DELETE']);
+
+// Routes
+define ('ROUTES',
+[
+    'interfaces/',
+    'core/',
+    'app/controllers/',
+    'app/models/',
+    'app/entities/',
+    'app/services/',
+    'app/exceptions/'
+]);
