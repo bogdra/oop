@@ -10,23 +10,21 @@ use Core\H;
 class CurrencyService
 {
     public $currency;
+    public $currencyObj;
     private $EurExchangeRatesArrayOfObjects;
     private $exchangeRateKeys;
-    public $currencyObj;
 
 
     public function __construct($currency = 'EUR')
     {
         $this->currency = $currency;
         $this->setEurExchangeRatesObjectsArray(INPUT_SOURCE);
-        $this->setExchangeRatesKeys();
-
-        $this->currencyObj = $this->convertTo($this->currency);
     }
 
 
     public function checkCurrenciesCodeInArrayOfAvailableCurrencies(array $currencies)
     {
+        $this->setExchangeRatesKeys();
         foreach ($currencies as $currency) {
             if (!in_array(strtoupper($currency), $this->getExchangeRatesKeys())) {
                 throw new CurrencyException('the given Currency is not present in the array currencies');
@@ -72,6 +70,7 @@ class CurrencyService
 
     public function getExchangeRatesKeys()
     {
+        $this->setExchangeRatesKeys();
         return $this->exchangeRateKeys;
     }
 
@@ -119,6 +118,7 @@ class CurrencyService
     public function toArray(): array
     {
         $arrayOfArrays = [];
+        $this->currencyObj = $this->convertTo($this->currency);
         foreach ($this->currencyObj as $obj) {
             $tempCurrencyArray['currencyFrom'] = $obj->getCurrencyFrom();
             $tempCurrencyArray['currencyTo'] = $obj->getCurrencyTo();
@@ -132,13 +132,5 @@ class CurrencyService
     private function convertXmlToObj(string $source): \SimpleXMLElement
     {
         return new \SimpleXMLElement($source);
-    }
-
-    public function checkCurrencyValue($currencyValue)
-    {
-        if ((int)$currencyValue <= 0)
-        {
-            throw new CurrencyException('The Currency value needs to be greater or equal to 0');
-        }
     }
 }
