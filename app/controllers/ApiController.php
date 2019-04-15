@@ -28,7 +28,7 @@ class ApiController extends Controller
         try {
             $this->allowedRequestMethods(['GET']);
             $params = func_get_args();
-            Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
+            Router::routeRuleValidation($params, ROUTE_RULE['API/CONVERT']);
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
 
             $currencyService = new CurrencyService(strtoupper($fromCurrency));
