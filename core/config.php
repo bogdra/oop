@@ -19,7 +19,7 @@ define('INPUT_SOURCE', 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-dail
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', 'nuesteasta10');
-define('DB_NAME', 'oop');
+define('DB_NAME', 'oop'); ,
 
 // Default Controllers
 define('DEFAULT_CONTROLLER', 'Home');
