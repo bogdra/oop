@@ -19,7 +19,7 @@ define('INPUT_SOURCE', 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-dail
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', 'nuesteasta10');
-define('DB_NAME', 'oop'); ,
+define('DB_NAME', 'oop');
 
 // Default Controllers
 define('DEFAULT_CONTROLLER', 'Home');
@@ -27,3 +27,7 @@ define('RESTRICTED_CONTROLLER', 'Restricted');
 define('DEFAULT_ACTION', 'Index');
 
 define('SUPPORTED_REQUEST_METHODS', ['GET', 'POST', 'PUT', 'DELETE']);
+define('ROUTE_RULE',
+    [
+        'API/CONVERT' => 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}'
+    ]);
