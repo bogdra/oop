@@ -2,7 +2,7 @@
 
 namespace App\Entities;
 
-class currencyEntity
+class CurrencyEntity
 {
     protected $currencyFrom;
     protected $currencyTo;
