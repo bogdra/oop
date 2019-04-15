@@ -1,0 +1,12 @@
+{
+  "autoload": {
+   "classmap": [
+     "interfaces",
+     "core",
+     "app/controllers",
+     "app/entities",
+     "app/services",
+     "app/exceptions"
+   ]
+  }
+}
