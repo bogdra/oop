@@ -2,135 +2,61 @@
 
 namespace App\Services;
 
-use App\Entities\CurrencyEntity;
+use App\Entities\Currency;
+use App\Entities\CurrencyExchanger;
+use App\Entities\EurExchangeRate;
 use App\Exception\FileException;
 use App\Exception\CurrencyException;
-use Core\H;
+use Core\Helper;
 
 class CurrencyService
 {
     public $currency;
     public $currencyObj;
-    private $EurExchangeRatesArrayOfObjects;
-    private $exchangeRateKeys;
+    private $eurExchangeRates;
 
 
-    public function __construct($currency = 'EUR')
+    public function __construct(ECBCurrencyExchange $ECBCurrencyExchange)
     {
-        $this->currency = $currency;
-        $this->setEurExchangeRatesObjectsArray(INPUT_SOURCE);
+        $this->eurExchangeRates = $ECBCurrencyExchange->getEurRates();
     }
 
 
-    public function checkCurrenciesCodeInArrayOfAvailableCurrencies(array $currencies)
+    private function canExchange(Currency $fromCurrency, Currency $toCurrency): void
     {
-        $this->setExchangeRatesKeys();
-        foreach ($currencies as $currency) {
-            if (!in_array(strtoupper($currency), $this->getExchangeRatesKeys())) {
-                throw new CurrencyException('the given Currency is not present in the array currencies');
-            }
+        if (!$this->eurExchangeRates->hasCurrencyRate($fromCurrency) || !$this->eurExchangeRates->hasCurrencyRate($toCurrency)) {
+            throw new CurrencyException('the given Currency is not present in the array currencies');
         }
     }
 
+//
+//    public function getBaseRate(string $currencyCode): float
+//    {
+//        /** @var EurExchangeRate $eurExchangeRate */
+//        foreach ($this->eurExchangeRates as $eurExchangeRate) {
+//            if ($eurExchangeRate->toCurrency() == $currencyCode) {
+//                return $eurExchangeRate->getRate();
+//            }
+//        }
+//
+//        return 1;
+//    }
 
-    private function setEurExchangeRatesObjectsArray($source)
+
+    public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
-        if (!H::remoteFileExists($source)) {
-            throw new FileException('The Exchange currency file does not exists');
-        }
-        $xmlRawInput = file_get_contents($source);
+        $this->canExchange($fromCurrency, $toCurrency);
 
-        foreach ($this->convertXmlToObj($xmlRawInput)->Cube->Cube->children() as $currency_parity) {
-            $tempArray[] = new currencyEntity(
-                'EUR',
-                $currency_parity->attributes()['currency'],
-                (float)$currency_parity->attributes()['rate']
-            );
-        };
-        $this->EurExchangeRatesArrayOfObjects = $tempArray;
-    }
-
-
-    public function getEurExchangeRatesObjectsArray()
-    {
-        return $this->EurExchangeRatesArrayOfObjects;
-    }
-
-
-    private function setExchangeRatesKeys()
-    {
-        $codes = [];
-        foreach ($this->getEurExchangeRatesObjectsArray() as $currencyObj) {
-            $codes[] = $currencyObj->getCurrencyTo();
-        }
-        \array_unshift($codes, "EUR");
-        $this->exchangeRateKeys = $codes;
-    }
-
-
-    public function getExchangeRatesKeys()
-    {
-        $this->setExchangeRatesKeys();
-        return $this->exchangeRateKeys;
-    }
-
-
-    public function getBaseConversionRate(string $currencyCode): float
-    {
-        foreach ($this->EurExchangeRatesArrayOfObjects as $obj) {
-            if ($obj->getCurrencyTo() == $currencyCode) {
-                return $obj->getRate();
-            }
-        }
-        return 1;
-    }
-
-
-    public function convertTo(string $currencyCode)
-    {
-        if ($currencyCode == 'EUR') {
-            return $this->getEurExchangeRatesObjectsArray();
+        if ($toCurrency == 'EUR') {
+            return 1;
         }
 
-        $baseConversionRate = $this->getBaseConversionRate($currencyCode);
-
-        foreach ($this->getEurExchangeRatesObjectsArray() as $exchangeCodeObj) {
-            if ($exchangeCodeObj->getCurrencyTo() != $currencyCode) {
-                $rate = round($exchangeCodeObj->getRate() / $baseConversionRate, 2);
-                $returnArray[] = new currencyEntity(
-                    $currencyCode,
-                    $exchangeCodeObj->getCurrencyTo(),
-                    $rate
-                );
-            } else {
-                $rate = round(1 / $exchangeCodeObj->getRate(), 2);
-                $returnArray[] = new currencyEntity(
-                    $exchangeCodeObj->getCurrencyTo(),
-                    'EUR',
-                    $rate
-                );
-            }
-        }
-        return $returnArray;
+        return $this->eurExchangeRates->getRateForCurrency('EUR') / $this->eurExchangeRates->getRateForCurrency($toCurrency);
     }
 
 
-    public function toArray(): array
+    public function getSupportedCurrencies()
     {
-        $arrayOfArrays = [];
-        $this->currencyObj = $this->convertTo($this->currency);
-        foreach ($this->currencyObj as $obj) {
-            $tempCurrencyArray['currencyFrom'] = $obj->getCurrencyFrom();
-            $tempCurrencyArray['currencyTo'] = $obj->getCurrencyTo();
-            $tempCurrencyArray['rate'] = $obj->getRate();
-            $arrayOfArrays[] = $tempCurrencyArray;
-        }
-        return $arrayOfArrays;
-    }
-
-
-    private function convertXmlToObj(string $source): \SimpleXMLElement
-    {
-        return new \SimpleXMLElement($source);
+        return $this->eurExchangeRates->getSupportedCurrencies();
     }
 }

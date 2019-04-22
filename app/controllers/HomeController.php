@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Services\CurrencyService;
+use App\Services\ECBCurrencyExchange;
 
 class HomeController extends Controller
 {
@@ -16,11 +17,12 @@ class HomeController extends Controller
     {
 
         $this->view->setTitle('Homepage');
-        $currency = new CurrencyService();
+        $currencyService =  new CurrencyService(new ECBCurrencyExchange(''));
 
         $params = [
-            'currencyArrayKeys' => $currency->getExchangeRatesKeys()
+            'currencyArrayKeys' => $currencyService->getSupportedCurrencies(),
         ];
+
         $this->view->render('home/index', $params);
     }
 }

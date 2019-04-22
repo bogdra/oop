@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entities\Currency;
 use \App\Exception\CurrencyException;
 use \App\Exception\RequestException;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
+use App\Services\ECBCurrencyExchange;
 use \App\Services\ErrorService;
 use \Core\Router;
 
@@ -26,13 +28,17 @@ class ApiController extends Controller
     {
 
         try {
+            //
             $this->allowedRequestMethods(['GET']);
             $params = func_get_args();
             Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
+            //
 
-            $currencyService = new CurrencyService(strtoupper($fromCurrency));
-            $currencyService->checkCurrenciesCodeInArrayOfAvailableCurrencies([$fromCurrency, $toCurrency]);
+
+
+
+            $currencyService = new CurrencyService(new ECBCurrencyExchange(''));
 
             foreach ($currencyService->toArray() as $currencyObj) {
                 if ($currencyObj['currencyTo'] == strtoupper($toCurrency)) {

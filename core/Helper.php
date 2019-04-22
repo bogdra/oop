@@ -7,7 +7,7 @@ namespace Core;
  * @package Core
  * @desc Helper class that contains different helper functions
  */
-class H
+class Helper
 {
     /**
      * @param $variable
