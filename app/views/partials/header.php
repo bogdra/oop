@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="<?=URL_ROOT?>css/bootstrap.min.css" >
-        <link rel="stylesheet" href="<?=URL_ROOT?>css/custom.css" >
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="<?= URL_ROOT ?>css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= URL_ROOT ?>css/custom.css">
 
-        <title></title>
-    </head>
+    <title><?= $this->getTitle() ?></title>
+</head>
 
 <body>
 
-<?php include ('menu.php'); ?>
+<?php include('menu.php'); ?>

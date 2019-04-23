@@ -1,8 +1,6 @@
+<?= $this->getPartial('header') ?>
 
-
-<?=$this->getPartial('header')?>
-
-<div class="container ">
+<div class="container">
     <div class="row">
         <div class="col-sm col-xs-6 ">
             <div class="card text-center">
@@ -10,9 +8,10 @@
                     Select a currency
                 </div>
                 <div class="card-body">
-                    <select id="currencySelect" class="form-control" onchange="updateCurrency(document.getElementById('currencySelect').value)">
-                        <?php foreach($this->params['currencyArrayKeys'] as $key): ?>
-                            <option value="<?=$key?>"><?=$key?></option>
+                    <select id="currencySelect" class="form-control"
+                            onchange="updateCurrency(document.getElementById('currencySelect').value)">
+                        <?php foreach ($this->params['currencyArrayKeys'] as $key): ?>
+                            <option value="<?= $key ?>"><?= $key ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -37,5 +36,4 @@
 </div>
 
 
-
-<?=$this->getPartial('footer')?>
+<?= $this->getPartial('footer') ?>

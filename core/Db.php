@@ -160,7 +160,6 @@ class Db implements PersistenceInterface
         return false;
     }
 
-
     public function count()
     {
         return count($this->result);

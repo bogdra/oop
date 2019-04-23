@@ -1,24 +1,32 @@
 <?php
+
 namespace App\Controller;
 
-use App\Core\Controller;
-use App\Model\ExchangeModel;
+use App\Services\CurrencyService;
+use App\Exception\CurrencyException;
+use App\Exception\RequestException;
+use App\Exception\FileException;
+
 
 class ExchangeController extends Controller
 {
-    public $currencyRates;
-
     public function __construct()
     {
         parent::__construct();
-        $this->currencyRates =  new ExchangeModel();
     }
 
 
-    public function getAction(string $currency)
+    public function getAction(string $currency = '')
     {
-        $this->allowedRequestMethods(['GET']);
+        try {
+            $this->allowedRequestMethods(['GET']);
+            $currencyObj = new CurrencyService($currency);
+        } catch (RequestException $requestException) {
+            echo $requestException->getMessage();
+        }
 
-        print_r(json_encode($this->currencyRates->convertTo($currency)));
+        print_r(json_encode($currencyObj->toArray()));
+
     }
 }
+
