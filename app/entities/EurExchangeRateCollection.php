@@ -51,7 +51,7 @@ class EurExchangeRateCollection
 
         /** @var EurExchangeRate $eurExchangeRate */
         foreach ($this->items as $eurExchangeRate) {
-            $codes[] = $eurExchangeRate->toCurrency();
+            $codes[] = $eurExchangeRate->getCurrency();
         }
         \array_unshift($codes, "EUR");
 
