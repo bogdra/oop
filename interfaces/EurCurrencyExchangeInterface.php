@@ -4,6 +4,5 @@ namespace App\Interfaces;
 
 interface EurCurrencyExchangeInterface
 {
-public function getEurRates();
-
+    public function getEurRates();
 }

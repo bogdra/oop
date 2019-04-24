@@ -15,10 +15,12 @@ class EurExchangeRate
         $this->rate = $rate;
     }
 
-    public function getCurrency()
+
+    public function getToCurrency()
     {
         return $this->toCurrency;
     }
+
 
     public function getRate()
     {

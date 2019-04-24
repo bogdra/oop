@@ -8,7 +8,6 @@ use \App\Exception\RequestException;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
 use App\Services\ECBCurrencyExchange;
-use \App\Services\ErrorService;
 use \Core\Router;
 
 class ApiController extends Controller
@@ -33,10 +32,6 @@ class ApiController extends Controller
             $params = func_get_args();
             Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
-            //
-
-
-
 
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
 
@@ -56,10 +51,31 @@ class ApiController extends Controller
 
         } catch (RequestException $requestException) {
             echo $requestException->getApiMessage();
-        } catch (CurrencyException $currencyException) {
-            echo $currencyException->getApiMessage();
         } catch (\Throwable $e) {
             echo $e->getMessage();
+        }
+    }
+
+    /*
+    * Route used is /api/exchange/{currency}
+    */
+    public function exchangeAction()
+    {
+        try {
+            $this->allowedRequestMethods(['GET']);
+            $params = func_get_args();
+            Router::routeRuleValidation($params, 'get/{alpha[3]}');
+
+            $currencyObj = new CurrencyService(new ECBCurrencyExchange);
+
+            $response = $currencyObj->getExchangeRatesForSpecificCurrency(new Currency($params[1]));
+            // Need to modify the response and the interpretation of the response to fit the api response type
+            print_r(json_encode($response));
+
+        } catch (RequestException $requestException) {
+            echo $requestException->getMessage();
+        } catch (CurrencyException $currencyException) {
+            echo $currencyException->getMessage();
         }
     }
 }

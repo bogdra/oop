@@ -41,7 +41,7 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
             $eurExchangeRateCollection->add(
                 new EurExchangeRate(
                     new Currency($currencyParity->attributes()['currency']),
-                    (float)$currencyParity->attributes()['rate']
+                    round((float)$currencyParity->attributes()['rate'], 2)
                 ));
         };
 

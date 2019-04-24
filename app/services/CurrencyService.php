@@ -29,40 +29,44 @@ class CurrencyService
         }
     }
 
-//
-//    public function getBaseRate(string $currencyCode): float
-//    {
-//        /** @var EurExchangeRate $eurExchangeRate */
-//        foreach ($this->eurExchangeRates as $eurExchangeRate) {
-//            if ($eurExchangeRate->toCurrency() == $currencyCode) {
-//                return $eurExchangeRate->getRate();
-//            }
-//        }
-//
-//        return 1;
-//    }
-
 
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
+
         try {
             foreach ([$toCurrency, $fromCurrency] as $currency) {
                 $this->canExchange($currency);
             }
+            $fromCurrencyToEURRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
         } catch (CurrencyException $currencyException) {
             echo $currencyException->getMessage();
         }
 
-        if ($toCurrency == 'EUR') {
-            return 1;
-        }
 
-        return $this->eurExchangeRates->getRateForCurrency('EUR') / $this->eurExchangeRates->getRateForCurrency($toCurrency);
+        return round($fromCurrencyToEURRate * $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency)), 2);
+    }
+
+
+    public function getExchangeRatesForSpecificCurrency(Currency $currency): array
+    {
+        $rates = [];
+        foreach ($this->eurExchangeRates->getSupportedCurrenciesCodes() as $item) {
+
+            if ($item->__toString() == $currency->__toString()) {
+                continue;
+            }
+            $parity = new \stdClass;
+            $parity->currencyTo = $item->__toString();
+            $parity->rate = $this->getExchangeRate($currency, new Currency($item));
+
+            $rates[] = (object)$parity;
+        }
+        return $rates;
     }
 
 
     public function getSupportedCurrencies()
     {
-        return $this->eurExchangeRates->getSupportedCurrencies();
+        return $this->eurExchangeRates->getSupportedCurrenciesCodes();
     }
 }
