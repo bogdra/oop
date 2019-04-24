@@ -13,7 +13,7 @@ class ApiService
         $this->response = new ApiResponseEntity(\strtolower($status), $data, $message);
     }
 
-    private function getResponse()
+    private function getResponse(): array
     {
         $response = [];
         switch (strtolower($this->response->getStatus())) {
@@ -42,7 +42,7 @@ class ApiService
         return $response;
     }
 
-    public function jsonResponse()
+    public function jsonResponse():string
     {
         if (!headers_sent()) {
             \header("Access-Control-Allow-Origin: *");

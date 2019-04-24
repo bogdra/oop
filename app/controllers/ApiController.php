@@ -23,11 +23,9 @@ class ApiController extends Controller
     /*
      * Route used is /api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
      */
-    public function convertAction()
+    public function convertAction(): void
     {
-
         try {
-            //
             $this->allowedRequestMethods(['GET']);
             $params = func_get_args();
             Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
@@ -35,19 +33,15 @@ class ApiController extends Controller
 
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
 
-            foreach ($currencyService->toArray() as $currencyObj) {
-                if ($currencyObj['currencyTo'] == strtoupper($toCurrency)) {
-                    $answer = $currencyObj['rate'] * (float)$currencyValue;
-                    $this->apiService->setResponse(
-                        'success', [
-                            'ConvertedValue' => $answer,
-                            'ConversionRate' => $currencyObj['rate']
-                        ]
-                    );
-                    print_r($this->apiService->jsonResponse());
-                    break;
-                }
-            }
+            $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
+            $this->apiService->setResponse(
+                'success', [
+                'ConvertedValue' => round((float)$currencyValue * $rate, 2),
+                'ConversionRate' => $rate
+            ]);
+
+            print_r($this->apiService->jsonResponse());
+
 
         } catch (RequestException $requestException) {
             echo $requestException->getApiMessage();
@@ -59,7 +53,7 @@ class ApiController extends Controller
     /*
     * Route used is /api/exchange/{currency}
     */
-    public function exchangeAction()
+    public function exchangeAction(): void
     {
         try {
             $this->allowedRequestMethods(['GET']);
@@ -70,12 +64,15 @@ class ApiController extends Controller
 
             $response = $currencyObj->getExchangeRatesForSpecificCurrency(new Currency($params[1]));
             // Need to modify the response and the interpretation of the response to fit the api response type
-            print_r(json_encode($response));
+            $this->apiService->setResponse('success', $response);
+            print_r($this->apiService->jsonResponse());
 
         } catch (RequestException $requestException) {
             echo $requestException->getMessage();
         } catch (CurrencyException $currencyException) {
             echo $currencyException->getMessage();
+        } catch (\Throwable $e) {
+            echo $e->getMessage();
         }
     }
 }

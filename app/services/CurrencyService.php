@@ -38,12 +38,14 @@ class CurrencyService
                 $this->canExchange($currency);
             }
             $fromCurrencyToEURRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
+            $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
+
         } catch (CurrencyException $currencyException) {
             echo $currencyException->getMessage();
         }
 
 
-        return round($fromCurrencyToEURRate * $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency)), 2);
+        return round($fromCurrencyToEURRate * $forCurrencyRate, 2);
     }
 
 

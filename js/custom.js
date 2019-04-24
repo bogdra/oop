@@ -33,7 +33,7 @@ function updateCurrency($currency)
         if (xhr.status === 200) {
             var data = JSON.parse(this.responseText);
             clearTable();
-            append_json(data);
+            append_json(data.data);
         }
         else {
             alert('Request failed. Returned status of ' + xhr.status);
