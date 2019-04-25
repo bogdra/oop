@@ -3,22 +3,24 @@
 namespace App\Services;
 
 use App\Entities\Currency;
-use App\Entities\CurrencyExchanger;
-use App\Entities\EurExchangeRate;
-use App\Exception\FileException;
+use App\Entities\CurrencyCollection;
+use App\Entities\ExchangeRate;
 use App\Exception\CurrencyException;
-use Core\Helper;
+use EOS\AcceptanceTests\Step\Productpage\ProductPage;
 
 class CurrencyService
 {
     public $currency;
     public $currencyObj;
+
+    /** @var CurrencyCollection */
     private $eurExchangeRates;
 
 
     public function __construct(ECBCurrencyExchange $ECBCurrencyExchange)
     {
         $this->eurExchangeRates = $ECBCurrencyExchange->getEurRates();
+        // var_dump( $this->eurExchangeRates); die();
     }
 
 
@@ -29,10 +31,28 @@ class CurrencyService
         }
     }
 
+    //generates a new CurrencyCollection of a specific given currency
+    public function generateCollectionForCurrency(Currency $currency): CurrencyCollection
+    {
+        $eurToDesiredCurrencyRate = 1 / $this->eurExchangeRates->getRateForCurrency($currency);
+       // var_dump($this->eurExchangeRates->getCurrencies()); die();
+        $newCurrencyCollection = new CurrencyCollection($currency);
+        /** @var $item ExchangeRate */
+        foreach ($this->eurExchangeRates->getCurrencies() as $item) {
+           // var_dump($this->eurExchangeRates); die();
+            $newCurrencyCollection->add(
+                new ExchangeRate(
+                    $item->getToCurrency(),
+                    round($eurToDesiredCurrencyRate * $item->getRate(), 2)
+                )
+            );
+        }
+        return $newCurrencyCollection;
+    }
+
 
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
-
         try {
             foreach ([$toCurrency, $fromCurrency] as $currency) {
                 $this->canExchange($currency);

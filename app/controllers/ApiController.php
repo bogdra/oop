@@ -61,10 +61,12 @@ class ApiController extends Controller
             Router::routeRuleValidation($params, 'get/{alpha[3]}');
 
             $currencyObj = new CurrencyService(new ECBCurrencyExchange);
+            $response = $currencyObj->generateCollectionForCurrency(new Currency('USD'));
 
-            $response = $currencyObj->getExchangeRatesForSpecificCurrency(new Currency($params[1]));
+            var_dump(($response->getCurrencies());
+           // $response = $currencyObj->getExchangeRatesForSpecificCurrency(new Currency($params[1]));
             // Need to modify the response and the interpretation of the response to fit the api response type
-            $this->apiService->setResponse('success', $response);
+            $this->apiService->setResponse('success', $response->getCurrencies());
             print_r($this->apiService->jsonResponse());
 
         } catch (RequestException $requestException) {

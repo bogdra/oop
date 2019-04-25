@@ -5,7 +5,8 @@ namespace App\Services;
 
 
 use App\Entities\Currency;
-use App\Entities\EurExchangeRate;
+use App\Entities\CurrencyCollection;
+use App\Entities\ExchangeRate;
 use App\Entities\EurExchangeRateCollection;
 use App\Interfaces\EurCurrencyExchangeInterface;
 use App\Exception\FileException;
@@ -25,26 +26,24 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
         }
     }
 
-    public function getEurRates(): EurExchangeRateCollection
+    public function getEurRates(): CurrencyCollection
     {
 
-        if(!file_get_contents($this->url))
-        {
+        if (!file_get_contents($this->url)) {
             throw new FileException('The Exchange currency local file does not exists or could not be open');
         }
 
-        $eurExchangeRateCollection = new EurExchangeRateCollection();
+        $eurExchangeRateCollection = new CurrencyCollection(new Currency('EUR'));
 
         $currenciesObjs = new \SimpleXMLElement(file_get_contents($this->url));
 
         foreach ($currenciesObjs->Cube->Cube->children() as $currencyParity) {
             $eurExchangeRateCollection->add(
-                new EurExchangeRate(
+                new ExchangeRate(
                     new Currency($currencyParity->attributes()['currency']),
                     round((float)$currencyParity->attributes()['rate'], 2)
                 ));
         };
-
         return $eurExchangeRateCollection;
     }
 }

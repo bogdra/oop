@@ -4,10 +4,11 @@
 namespace App\Entities;
 
 
-class EurExchangeRate
+class ExchangeRate
 {
     private $toCurrency;
     private $rate;
+
 
     public function __construct(Currency $toCurrency, float $rate)
     {

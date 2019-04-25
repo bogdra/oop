@@ -11,11 +11,12 @@ class EurExchangeRateCollection
 
     private $items = [];
 
-    //you can instantiate it with an array of EurExchangeRate or an empty array
+
+    //you can instantiate it with an array of ExchangeRate or an empty array
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            if (!$item instanceof EurExchangeRate) {
+            if (!$item instanceof ExchangeRate) {
                 throw new InvalidArgumentException('invalid input');
             }
 
@@ -23,11 +24,13 @@ class EurExchangeRateCollection
         }
     }
 
+
     //adds anew Currency to the collection
-    public function add(EurExchangeRate $eurExchangeRate): void
+    public function add(ExchangeRate $eurExchangeRate): void
     {
         array_push($this->items, $eurExchangeRate);
     }
+
 
     // returns the currency rate from EUR -> $currency
     public function getRateForCurrency(Currency $currency): float
@@ -52,12 +55,13 @@ class EurExchangeRateCollection
         return false;
     }
 
+
     //returns an array of  the codes  of the currencies that are supported for exchange
     public function getSupportedCurrenciesCodes(): array
     {
         $codes = [];
 
-        /** @var EurExchangeRate $eurExchangeRate */
+        /** @var ExchangeRate $eurExchangeRate */
         foreach ($this->items as $eurExchangeRate) {
             $codes[] = $eurExchangeRate->getToCurrency();
         }
@@ -71,5 +75,4 @@ class EurExchangeRateCollection
     {
         return $this->items;
     }
-
 }
