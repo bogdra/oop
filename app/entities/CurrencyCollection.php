@@ -8,7 +8,7 @@ use http\Exception\InvalidArgumentException;
 
 class CurrencyCollection
 {
-
+    /** @var Currency $fromCurrency */
     private $fromCurrency;
     private $items = [];
 
@@ -31,15 +31,25 @@ class CurrencyCollection
 
 
     //adds anew Currency to the collection
+    private function checkExchangeRateIsNotForCurrency(ExchangeRate $item, Currency $currency): bool
+    {
+        if ($item->getToCurrency()->__toString() === $$currency->__toString()) {
+            return false;
+        }
+        return true;
+    }
+
+
+    // returns the currency rate from EUR -> $currency
     public function add(ExchangeRate $exchangeRate): void
     {
         array_push($this->items, $exchangeRate);
     }
 
 
-    // returns the currency rate from EUR -> $currency
     public function getRateForCurrency(Currency $toCurrency): float
     {
+        /** @var ExchangeRate $item */
         foreach ($this->items as $item) {
             if ($item->getToCurrency()->__toString() === $toCurrency->__toString()) {
                 return round($item->getRate(), 2);
@@ -51,8 +61,9 @@ class CurrencyCollection
 
     public function hasCurrencyRate(Currency $currency): bool
     {
+        /** @var ExchangeRate $item */
         foreach ($this->getSupportedCurrenciesCodes() as $item) {
-            if ($item == $currency) {
+            if ($item->getToCurrency()->__toString() === $currency->__toString()) {
                 return true;
             }
         }
@@ -60,7 +71,7 @@ class CurrencyCollection
     }
 
 
-    //returns an array of  the codes  of the currencies that are supported for exchange
+    //returns an array of  the Currency objects that are supported for exchange
     public function getSupportedCurrenciesCodes(): array
     {
         $codes = [];
@@ -75,31 +86,29 @@ class CurrencyCollection
     }
 
 
+    public function getFromCurrency(): Currency
+    {
+        return $this->fromCurrency;
+    }
+
+    //returns the array of ExchangeRate objects
     public function getCurrencies(): array
     {
         return $this->items;
     }
 
-
-    //validates that the exchange rate given is not the main Currency
-    private function checkExchangeRateIsNotForCurrency(ExchangeRate $item, Currency $currency): bool
+    //formats the CurrencyCollection Object to Array of Simple objects with Public Properties
+    public function formatCurrencyCollectionForApi(): array
     {
-        if ($item->getToCurrency()->__toString() === $$currency->__toString()) {
-            return false;
-        }
-        return true;
-    }
-
-    public function formatCurrencyCollectionForJson(CurrencyCollection $collection)
-    {
-        $arrayOfItems = [];
+        $arrayOfObjects = [];
         /** @var ExchangeRate $item */
-        foreach ($collection as $item)
-        {
-            $temp['toCurrency'] = $item->getToCurrency();
-            $temp['rate'] = $item->getRate();
-            $arrayOfItems[] = (object)$temp;
+        foreach ($this->items as $item) {
+
+            $arrayOfObjects[] = (object)[
+                'toCurrency' => $item->getToCurrency()->__toString(),
+                'rate' => $item->getRate()
+            ];
         }
-        return $arrayOfItems;
+        return $arrayOfObjects;
     }
 }

@@ -26,9 +26,8 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
         }
     }
 
-    public function getEurRates(): CurrencyCollection
+    public function getEurCollection(): CurrencyCollection
     {
-
         if (!file_get_contents($this->url)) {
             throw new FileException('The Exchange currency local file does not exists or could not be open');
         }

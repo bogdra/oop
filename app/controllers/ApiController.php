@@ -1,80 +1,77 @@
 <?php
 
-namespace App\Controller;
+    namespace App\Controller;
 
-use App\Entities\Currency;
-use \App\Exception\CurrencyException;
-use \App\Exception\RequestException;
-use \App\Services\CurrencyService;
-use \App\Services\ApiService;
-use App\Services\ECBCurrencyExchange;
-use \Core\Router;
+    use App\Entities\Currency;
+    use \App\Exception\CurrencyException;
+    use \App\Exception\RequestException;
+    use \App\Services\CurrencyService;
+    use \App\Services\ApiService;
+    use App\Services\ECBCurrencyExchange;
+    use \Core\Router;
 
-class ApiController extends Controller
-{
-    public $apiService;
-
-    public function __construct()
+    class ApiController extends Controller
     {
-        parent::__construct();
-        $this->apiService = new ApiService();
-    }
+        public $apiService;
 
-    /*
-     * Route used is /api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
-     */
-    public function convertAction(): void
-    {
-        try {
-            $this->allowedRequestMethods(['GET']);
-            $params = func_get_args();
-            Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
-            list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
+        public function __construct()
+        {
+            parent::__construct();
+            $this->apiService = new ApiService();
+        }
 
-            $currencyService = new CurrencyService(new ECBCurrencyExchange());
+        /*
+         * Route used is /api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
+         */
+        public function convertAction(): void
+        {
+            try {
+                $this->allowedRequestMethods(['GET']);
+                $params = func_get_args();
+                Router::routeRuleValidation($params, 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
+                list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = $params;
 
-            $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
-            $this->apiService->setResponse(
-                'success', [
-                'ConvertedValue' => round((float)$currencyValue * $rate, 2),
-                'ConversionRate' => $rate
-            ]);
+                $currencyService = new CurrencyService(new ECBCurrencyExchange());
 
-            print_r($this->apiService->jsonResponse());
+                $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
+                $this->apiService->setResponse(
+                    'success', [
+                    'ConvertedValue' => round((float)$currencyValue * $rate, 2),
+                    'ConversionRate' => $rate
+                ]);
+                print_r($this->apiService->jsonResponse());
 
+            } catch (RequestException $requestException) {
+                echo $requestException->getApiMessage();
+            } catch (\Throwable $e) {
+                echo $e->getMessage();
+            }
+        }
 
-        } catch (RequestException $requestException) {
-            echo $requestException->getApiMessage();
-        } catch (\Throwable $e) {
-            echo $e->getMessage();
+        /*
+        * Route used is /api/exchange/{currency}
+        */
+        public function exchangeAction(): void
+        {
+            try {
+                $this->allowedRequestMethods(['GET']);
+                $params = func_get_args();
+                Router::routeRuleValidation($params, 'get/{alpha[3]}');
+
+                $currencyObj = new CurrencyService(new ECBCurrencyExchange);
+                $response = $currencyObj
+                    ->generateCollectionForCurrency(new Currency('USD'))
+                    ->formatCurrencyCollectionForApi();
+
+                $this->apiService->setResponse('success', $response);
+                print_r($this->apiService->jsonResponse());
+
+            } catch (RequestException $requestException) {
+                echo $requestException->getMessage();
+            } catch (CurrencyException $currencyException) {
+                echo $currencyException->getMessage();
+            } catch (\Throwable $e) {
+                echo $e->getMessage();
+            }
         }
     }
-
-    /*
-    * Route used is /api/exchange/{currency}
-    */
-    public function exchangeAction(): void
-    {
-        try {
-            $this->allowedRequestMethods(['GET']);
-            $params = func_get_args();
-            Router::routeRuleValidation($params, 'get/{alpha[3]}');
-
-            $currencyObj = new CurrencyService(new ECBCurrencyExchange);
-            $response = $currencyObj->generateCollectionForCurrency(new Currency('USD'));
-
-            var_dump(($response->getCurrencies());
-           // $response = $currencyObj->getExchangeRatesForSpecificCurrency(new Currency($params[1]));
-            // Need to modify the response and the interpretation of the response to fit the api response type
-            $this->apiService->setResponse('success', $response->getCurrencies());
-            print_r($this->apiService->jsonResponse());
-
-        } catch (RequestException $requestException) {
-            echo $requestException->getMessage();
-        } catch (CurrencyException $currencyException) {
-            echo $currencyException->getMessage();
-        } catch (\Throwable $e) {
-            echo $e->getMessage();
-        }
-    }
-}

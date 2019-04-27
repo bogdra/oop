@@ -19,7 +19,7 @@ class CurrencyService
 
     public function __construct(ECBCurrencyExchange $ECBCurrencyExchange)
     {
-        $this->eurExchangeRates = $ECBCurrencyExchange->getEurRates();
+        $this->eurExchangeRates = $ECBCurrencyExchange->getEurCollection();
         // var_dump( $this->eurExchangeRates); die();
     }
 

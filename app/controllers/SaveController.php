@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
+use App\Services\ECBCurrencyExchange;
+use App\Entities\ExchangeRate;
 use \Core\Db;
-use \App\Services\CurrencyService;
 
 class SaveController extends Controller
 {
@@ -19,13 +20,16 @@ class SaveController extends Controller
             case 'db':
 
                 $db = Db::init();
-                $exchangeService = new CurrencyService();
-                $EurParities = $exchangeService->getEurExchangeRatesObjectsArray();
-                foreach ($EurParities as $eurParity) {
-                    $fields[$eurParity->getCurrencyTo()] = $eurParity->getRate();
+                $eurCollection = (new ECBCurrencyExchange())->getEurCollection();
+
+                /** @var ExchangeRate $eurParity */
+                foreach ($eurCollection->getCurrencies() as $eurParity) {
+                    if ($eurParity->getToCurrency()->__toString() == $eurCollection->getFromCurrency()->__toString()) {
+                        continue;
+                    }
+                    $fields[$eurParity->getToCurrency()->__toString()] = $eurParity->getRate();
                 }
                 $fields['timestamp'] = date("Y-m-d H:i:s");
-
                 if ($db->insert('eurparities', $fields)) {
                     echo('Successfully saved the current exchange rates for EUR to the DB');
                 } else {
