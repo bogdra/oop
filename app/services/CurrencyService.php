@@ -20,7 +20,6 @@ class CurrencyService
     public function __construct(ECBCurrencyExchange $ECBCurrencyExchange)
     {
         $this->eurExchangeRates = $ECBCurrencyExchange->getEurCollection();
-        // var_dump( $this->eurExchangeRates); die();
     }
 
 
@@ -63,8 +62,6 @@ class CurrencyService
         } catch (CurrencyException $currencyException) {
             echo $currencyException->getMessage();
         }
-
-
         return round($fromCurrencyToEURRate * $forCurrencyRate, 2);
     }
 

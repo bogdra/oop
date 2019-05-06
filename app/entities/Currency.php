@@ -5,7 +5,6 @@ namespace App\Entities;
 
 
 use App\Exception\CurrencyException;
-use mysql_xdevapi\Exception;
 
 class Currency
 {

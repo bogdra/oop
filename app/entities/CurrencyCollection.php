@@ -17,20 +17,16 @@ class CurrencyCollection
         $this->fromCurrency = $currency;
 
         foreach ($items as $item) {
-            if (!$item instanceof ExchangeRate) {
-                throw new InvalidArgumentException('invalid input');
-            }
-
             if ($this->checkExchangeRateIsNotForCurrency($item, $this->fromCurrency)) {
                 $this->add($item);
             }
         }
         //insert into the EurExchangeRate the rate for EUR -> EUR
-        $this->add(new ExchangeRate($currency, 1));
+        //|$this->add(new ExchangeRate($currency, 1));
     }
 
 
-    //adds anew Currency to the collection
+    //checks if the $currency Object is already present in the $item Object
     private function checkExchangeRateIsNotForCurrency(ExchangeRate $item, Currency $currency): bool
     {
         if ($item->getToCurrency()->__toString() === $$currency->__toString()) {
@@ -40,7 +36,7 @@ class CurrencyCollection
     }
 
 
-    // returns the currency rate from EUR -> $currency
+    // pushes the Currency object into the $items array
     public function add(ExchangeRate $exchangeRate): void
     {
         array_push($this->items, $exchangeRate);
@@ -103,7 +99,6 @@ class CurrencyCollection
         $arrayOfObjects = [];
         /** @var ExchangeRate $item */
         foreach ($this->items as $item) {
-
             $arrayOfObjects[] = (object)[
                 'toCurrency' => $item->getToCurrency()->__toString(),
                 'rate' => $item->getRate()
