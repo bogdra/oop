@@ -49,7 +49,7 @@
         }
 
         /*
-        * Route used is /api/exchange/{currency}
+        * Route used is /api/exchange/get/{currency}
         */
         public function exchangeAction(): void
         {
@@ -60,7 +60,7 @@
 
                 $currencyObj = new CurrencyService(new ECBCurrencyExchange);
                 $response = $currencyObj
-                    ->generateCollectionForCurrency(new Currency('USD'))
+                    ->generateCollectionForCurrency(new Currency($params[1]))
                     ->formatCurrencyCollectionForApi();
 
                 $this->apiService->setResponse('success', $response);
