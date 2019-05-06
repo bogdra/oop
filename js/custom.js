@@ -4,7 +4,7 @@ function append_json(data) {
     var table = document.getElementById('gable');
 
     data.forEach(function (obj) {
-        // console.log(obj);
+        console.log(obj);
         var tr = document.createElement('tr');
         tr.innerHTML = '<td>' + obj.toCurrency + '</td>' +
             '<td>' + obj.rate + '</td>';
@@ -22,7 +22,7 @@ function clearTable() {
 
 //this function retrieves the currency from the route
 function updateCurrency($currency) {
-    console.log($currency);
+   // console.log($currency);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'api/exchange/get/' + $currency);
     xhr.onload = function () {

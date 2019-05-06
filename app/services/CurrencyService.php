@@ -6,7 +6,6 @@ use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
 use App\Exception\CurrencyException;
-use EOS\AcceptanceTests\Step\Productpage\ProductPage;
 
 class CurrencyService
 {
@@ -34,11 +33,13 @@ class CurrencyService
     public function generateCollectionForCurrency(Currency $currency): CurrencyCollection
     {
         $eurToDesiredCurrencyRate = 1 / $this->eurExchangeRates->getRateForCurrency($currency);
-       // var_dump($this->eurExchangeRates->getCurrencies()); die();
         $newCurrencyCollection = new CurrencyCollection($currency);
         /** @var $item ExchangeRate */
         foreach ($this->eurExchangeRates->getCurrencies() as $item) {
-           // var_dump($this->eurExchangeRates); die();
+            //check if the currency Object is already in the eurExchangeRates Collection in order to not show it
+            if ($item->getToCurrency() == $currency->__toString()) {
+                continue;
+            }
             $newCurrencyCollection->add(
                 new ExchangeRate(
                     $item->getToCurrency(),
@@ -84,7 +85,7 @@ class CurrencyService
     }
 
 
-    public function getSupportedCurrencies()
+    public function getSupportedCurrencies(): array
     {
         return $this->eurExchangeRates->getSupportedCurrenciesCodes();
     }

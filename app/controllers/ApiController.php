@@ -59,7 +59,7 @@
                 Router::routeRuleValidation($params, 'get/{alpha[3]}');
 
                 $currencyObj = new CurrencyService(new ECBCurrencyExchange);
-                //var_dump($currencyObj);
+               // var_dump($currencyObj);
                 $response = $currencyObj
                     ->generateCollectionForCurrency(new Currency($params[1]))
                     ->formatCurrencyCollectionForApi();

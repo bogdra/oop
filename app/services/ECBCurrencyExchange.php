@@ -36,6 +36,8 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
 
         $currenciesObjs = new \SimpleXMLElement(file_get_contents($this->url));
 
+        //injecting the EUR parity into the EUR Currency Collection
+        $eurExchangeRateCollection->add(new ExchangeRate(new Currency('EUR'), 1));
         foreach ($currenciesObjs->Cube->Cube->children() as $currencyParity) {
             $eurExchangeRateCollection->add(
                 new ExchangeRate(
@@ -43,6 +45,7 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
                     round((float)$currencyParity->attributes()['rate'], 2)
                 ));
         };
+
         return $eurExchangeRateCollection;
     }
 }
