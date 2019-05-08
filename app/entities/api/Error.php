@@ -21,7 +21,7 @@ class Error implements ApiResponseInterface
     {
         return json_encode(
             [
-                'status' => \get_class($this),
+                'status' => substr(get_class($this), strrpos(get_class($this), '\\') + 1),
                 'message' => $this->message
             ]
         );

@@ -4,23 +4,21 @@
 namespace App\Controller;
 
 
-use App\Entities\Currency;
-use \App\Exception\CurrencyException;
-use \App\Exception\RequestException;
+use \Core\Router;
+use \App\Entities\Currency;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
 use \App\Services\ECBCurrencyExchange;
-use \Core\Router;
+use \App\Exception\CurrencyException;
+use \App\Exception\RequestException;
 
 
 class ApiController extends Controller
 {
-    public $apiService;
 
     public function __construct()
     {
         parent::__construct();
-        $this->apiService = new ApiService();
     }
 
     /*
@@ -34,14 +32,13 @@ class ApiController extends Controller
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = func_get_args();
 
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
-
             $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
 
-            $apiService = new ApiService( 'success', [
+            $apiService = new ApiService('success', [
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
                 'ConversionRate' => $rate
             ]);
-           print_r($apiService->getResponse());
+            print_r($apiService->getResponse());
 
         } catch (RequestException $requestException) {
             echo $requestException->getApiMessage();
@@ -67,8 +64,9 @@ class ApiController extends Controller
                 ->generateCollectionForCurrency(new Currency($givenCurrency))
                 ->formatCurrencyCollectionForApi();
 
-            $this->apiService->setResponse('success', $response);
-            print_r($this->apiService->jsonResponse());
+            $apiService = new ApiService('success', $response);
+           // var_dump($apiService->getResponse())->data;die();
+            print_r($apiService->getResponse()->getResponse());
 
         } catch (RequestException $requestException) {
             echo $requestException->getMessage();

@@ -4,8 +4,7 @@
 namespace App\Entities;
 
 
-use App\Exception\RequestException;
-use App\Interfaces\ApiResponseInterface;
+use \App\Interfaces\ApiResponseInterface;
 
 
 class ApiResponseEntity
