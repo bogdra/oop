@@ -8,6 +8,7 @@ class CurrencyExchanger
     protected $currencyTo;
     protected $rate;
 
+
     public function __construct(Currency $currencyFrom, Currency $currencyTo, float $rate)
     {
         $this->currencyFrom = $currencyFrom;
@@ -15,10 +16,12 @@ class CurrencyExchanger
         $this->rate = $rate;
     }
 
+
     public function getCurrencyFrom(): string
     {
         return $this->currencyFrom;
     }
+
 
     public function getCurrencyTo(): string
     {
@@ -29,6 +32,7 @@ class CurrencyExchanger
     {
         return $this->rate;
     }
+
 
     public function exchange(float $amount): float
     {

@@ -4,5 +4,8 @@ namespace App\Interfaces;
 
 interface EurCurrencyExchangeInterface
 {
-    public function getEurCollection();
+    /**
+     * @return CurrencyCollection
+     */
+    public function getEurCollection():;
 }

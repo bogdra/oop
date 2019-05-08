@@ -6,6 +6,7 @@ use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
 use App\Exception\CurrencyException;
+use App\Interfaces\EurCurrencyExchangeInterface;
 
 class CurrencyService
 {
@@ -16,7 +17,7 @@ class CurrencyService
     private $eurExchangeRates;
 
 
-    public function __construct(ECBCurrencyExchange $ECBCurrencyExchange)
+    public function __construct(EurCurrencyExchangeInterface $ECBCurrencyExchange)
     {
         $this->eurExchangeRates = $ECBCurrencyExchange->getEurCollection();
     }
@@ -67,7 +68,7 @@ class CurrencyService
     }
 
 
-    public function getExchangeRatesForSpecificCurrency(Currency $currency): array
+    public function getExchangeRatesForSpecificCurrency(Currency $currency): CurrencyCollection
     {
         $rates = [];
         foreach ($this->eurExchangeRates->getSupportedCurrenciesCodes() as $item) {
@@ -75,13 +76,9 @@ class CurrencyService
             if ($item->__toString() == $currency->__toString()) {
                 continue;
             }
-            $parity = new \stdClass;
-            $parity->currencyTo = $item->__toString();
-            $parity->rate = $this->getExchangeRate($currency, new Currency($item));
-
-            $rates[] = (object)$parity;
+            $rates[] = new ExchangeRate($item, $this->getExchangeRate($currency, new Currency($item)));
         }
-        return $rates;
+        return new CurrencyCollection($currency, $rates);
     }
 
 

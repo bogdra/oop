@@ -1,8 +1,11 @@
 <?php
 
+
 namespace App\Services;
 
+
 use App\Entities\ApiResponseEntity;
+
 
 class ApiService
 {
@@ -12,6 +15,7 @@ class ApiService
     {
         $this->response = new ApiResponseEntity(\strtolower($status), $data, $message);
     }
+
 
     private function getResponse(): array
     {
@@ -41,6 +45,7 @@ class ApiService
 
         return $response;
     }
+
 
     public function jsonResponse():string
     {
