@@ -76,7 +76,6 @@ class CurrencyCollection
         foreach ($this->items as $eurExchangeRate) {
             $codes[] = $eurExchangeRate->getToCurrency();
         }
-        \array_unshift($codes, new Currency('EUR'));
 
         return $codes;
     }

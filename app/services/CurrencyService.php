@@ -6,6 +6,7 @@ use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
 use App\Exception\CurrencyException;
+use App\Interfaces\EurCurrencyExchangeInterface;
 
 class CurrencyService
 {
@@ -16,20 +17,11 @@ class CurrencyService
     private $eurExchangeRates;
 
 
-    public function __construct(ECBCurrencyExchange $ECBCurrencyExchange)
+    public function __construct(EurCurrencyExchangeInterface $randomCurrencyExchange)
     {
-        $this->eurExchangeRates = $ECBCurrencyExchange->getEurCollection();
+        $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
     }
 
-
-    private function canExchange(Currency $currency): void
-    {
-        if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
-            throw new CurrencyException('the given Currency is not present in the array currencies');
-        }
-    }
-
-    //generates a new CurrencyCollection of a specific given currency
     public function generateCollectionForCurrency(Currency $currency): CurrencyCollection
     {
         $eurToDesiredCurrencyRate = 1 / $this->eurExchangeRates->getRateForCurrency($currency);
@@ -50,22 +42,7 @@ class CurrencyService
         return $newCurrencyCollection;
     }
 
-
-    public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
-    {
-        try {
-            foreach ([$toCurrency, $fromCurrency] as $currency) {
-                $this->canExchange($currency);
-            }
-            $fromCurrencyToEURRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
-            $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
-
-        } catch (CurrencyException $currencyException) {
-            echo $currencyException->getMessage();
-        }
-        return round($fromCurrencyToEURRate * $forCurrencyRate, 2);
-    }
-
+    //generates a new CurrencyCollection of a specific given currency
 
     public function getExchangeRatesForSpecificCurrency(Currency $currency): array
     {
@@ -84,6 +61,26 @@ class CurrencyService
         return $rates;
     }
 
+    public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
+    {
+        try {
+            foreach ([$toCurrency, $fromCurrency] as $currency) {
+                $this->canExchange($currency);
+            }
+            $fromCurrencyToEurRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
+            $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
+        } catch (CurrencyException $currencyException) {
+            echo $currencyException->getMessage();
+        }
+        return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
+    }
+
+    private function canExchange(Currency $currency): void
+    {
+        if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
+            throw new CurrencyException('the given Currency is not present in the array currencies');
+        }
+    }
 
     public function getSupportedCurrencies(): array
     {
