@@ -17,14 +17,12 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
 
     protected $url;
 
+
     public function __construct(string $url = INPUT_SOURCE)
     {
         $this->url = $url;
-
-        if (!Helper::remoteFileExists($this->url)) {
-            throw new FileException('The Exchange currency remote file does not exists');
-        }
     }
+
 
     public function getEurCollection(): CurrencyCollection
     {
@@ -38,6 +36,7 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
 
         //injecting the EUR parity into the EUR Currency Collection
         $eurExchangeRateCollection->add(new ExchangeRate(new Currency('EUR'), 1));
+
         foreach ($currenciesObjs->Cube->Cube->children() as $currencyParity) {
             $eurExchangeRateCollection->add(
                 new ExchangeRate(

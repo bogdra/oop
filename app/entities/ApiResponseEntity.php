@@ -1,12 +1,15 @@
 <?php
 
+
 namespace App\Entities;
+
 
 class ApiResponseEntity
 {
     private $status;
     private $message;
     private $data;
+
 
     public function __construct($status, $data = '', $message = '')
     {
@@ -15,15 +18,18 @@ class ApiResponseEntity
         $this->data = $data;
     }
 
+
     public function getMessage()
     {
         return $this->message;
     }
 
+
     public function getStatus()
     {
         return $this->status;
     }
+
 
     public function getData()
     {

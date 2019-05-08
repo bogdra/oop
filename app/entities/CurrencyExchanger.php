@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Entities;
+
 
 class CurrencyExchanger
 {
@@ -15,21 +17,25 @@ class CurrencyExchanger
         $this->rate = $rate;
     }
 
+
     public function getCurrencyFrom(): string
     {
         return $this->currencyFrom;
     }
+
 
     public function getCurrencyTo(): string
     {
         return $this->currencyTo;
     }
 
+
     public function getRate(): float
     {
         return $this->rate;
     }
 
+    
     public function exchange(float $amount): float
     {
         return $this->getRate() * $amount;
