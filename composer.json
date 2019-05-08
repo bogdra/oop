@@ -8,6 +8,7 @@
       "core",
       "app/controllers",
       "app/entities",
+      "app/entities/api",
       "app/services",
       "app/exceptions"
     ]
