@@ -7,5 +7,5 @@ interface EurCurrencyExchangeInterface
     /**
      * @return CurrencyCollection
      */
-    public function getEurCollection():;
+    public function getEurCollection();
 }

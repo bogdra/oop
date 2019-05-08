@@ -1,10 +1,14 @@
 {
+  "require": {
+    "ext-json": "*"
+  },
   "autoload": {
     "classmap": [
       "interfaces",
       "core",
       "app/controllers",
       "app/entities",
+      "app/entities/api",
       "app/services",
       "app/exceptions"
     ]

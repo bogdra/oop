@@ -9,7 +9,7 @@ use \App\Exception\CurrencyException;
 use \App\Exception\RequestException;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
-use App\Services\ECBCurrencyExchange;
+use \App\Services\ECBCurrencyExchange;
 use \Core\Router;
 
 
@@ -36,12 +36,12 @@ class ApiController extends Controller
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
 
             $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
-            $this->apiService->setResponse(
-                'success', [
+
+            $apiService = new ApiService( 'success', [
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
                 'ConversionRate' => $rate
             ]);
-            print_r($this->apiService->jsonResponse());
+           print_r($apiService->getResponse());
 
         } catch (RequestException $requestException) {
             echo $requestException->getApiMessage();
@@ -49,6 +49,7 @@ class ApiController extends Controller
             echo $e->getMessage();
         }
     }
+
 
     /*
     * Route used is /api/exchange/get/{currency}
@@ -59,6 +60,7 @@ class ApiController extends Controller
             $this->allowedRequestMethods(['GET']);
             Router::routeRuleValidation(func_get_args(), 'get/{alpha[3]}');
             list($get, $givenCurrency) = func_get_args();
+
 
             $currencyObj = new CurrencyService(new ECBCurrencyExchange);
             $response = $currencyObj
