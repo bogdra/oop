@@ -4,13 +4,12 @@
 namespace App\Entities;
 
 
-use http\Exception\InvalidArgumentException;
-
 class CurrencyCollection
 {
     /** @var Currency $fromCurrency */
     private $fromCurrency;
     private $items = [];
+
 
     public function __construct(Currency $currency, array $items = [])
     {
@@ -27,7 +26,7 @@ class CurrencyCollection
     //checks if the $currency Object is already present in the $item Object
     private function checkExchangeRateIsNotForCurrency(ExchangeRate $item, Currency $currency): bool
     {
-        if ($item->getToCurrency()->__toString() === $$currency->__toString()) {
+        if ($item->getToCurrency()->__toString() === $currency->__toString()) {
             return false;
         }
         return true;
@@ -57,9 +56,9 @@ class CurrencyCollection
 
     public function hasCurrencyRate(Currency $currency): bool
     {
-        /** @var ExchangeRate $item */
+        /** @var Currency $item */
         foreach ($this->getSupportedCurrenciesCodes() as $item) {
-            if ($item->getToCurrency()->__toString() === $currency->__toString()) {
+            if ($item->__toString() === $currency->__toString()) {
                 return true;
             }
         }
@@ -91,6 +90,7 @@ class CurrencyCollection
     {
         return $this->items;
     }
+
 
     //formats the CurrencyCollection Object to Array of Simple objects with Public Properties
     public function formatCurrencyCollectionForApi(): array

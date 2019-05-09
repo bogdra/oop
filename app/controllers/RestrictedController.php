@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Interfaces\ControllerInterface;
 
-class RestrictedController implements ControllerInterface
+class RestrictedController
 {
-
     public function indexAction()
     {
         echo 'Restricted Area';

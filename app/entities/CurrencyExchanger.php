@@ -28,6 +28,7 @@ class CurrencyExchanger
         return $this->currencyTo;
     }
 
+
     public function getRate(): float
     {
         return $this->rate;

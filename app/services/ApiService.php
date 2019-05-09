@@ -4,7 +4,6 @@
 namespace App\Services;
 
 
-use App\Entities\ApiResponseEntity;
 use App\Interfaces\ApiResponseInterface;
 
 
@@ -12,20 +11,21 @@ class ApiService
 {
     private $response;
 
-    public function __construct($status, $data)
+
+    public function setResponse(ApiResponseInterface $response): void
     {
-        $this->response = new ApiResponseEntity($status, $data);
+        $this->response = $response;
     }
 
 
-    public function getResponse(): ApiResponseInterface
+    public function getResponse()
     {
         if (!headers_sent()) {
             \header("Access-Control-Allow-Origin: *");
             \header("Content-Type: application/json; charset=UTF-8");
             \http_response_code(200);
 
-            return $this->response->getResponse();
+            return $this->response;
         }
         return 'Headers already sent';
 

@@ -4,7 +4,7 @@ namespace Core;
 
 
 // Debug mode
-define('DEBUG', false);
+define('DEBUG', true);
 
 // Site title
 define('SITE_TITLE', 'OOP');

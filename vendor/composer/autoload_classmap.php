@@ -30,7 +30,6 @@ return array(
     'App\\Services\\ApiService' => $baseDir . '/app/services/ApiService.php',
     'App\\Services\\CurrencyService' => $baseDir . '/app/services/CurrencyService.php',
     'App\\Services\\ECBCurrencyExchange' => $baseDir . '/app/services/ECBCurrencyExchange.php',
-    'App\\Services\\ErrorService' => $baseDir . '/app/services/ErrorService.php',
     'Core\\Db' => $baseDir . '/core/Db.php',
     'Core\\Helper' => $baseDir . '/core/Helper.php',
     'Core\\Router' => $baseDir . '/core/Router.php',
