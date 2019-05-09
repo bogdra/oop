@@ -10,18 +10,18 @@ use App\Interfaces\ApiResponseInterface;
 class Error implements ApiResponseInterface
 {
     private $message;
+    private $status = 'error';
 
     public function __construct(string $message)
     {
         $this->message = $message;
     }
 
-
-    public function getResponse()
+    public function __toString()
     {
         return json_encode(
             [
-                'status' => substr(get_class($this), strrpos(get_class($this), '\\') + 1),
+                'status' => $this->status,
                 'message' => $this->message
             ]
         );

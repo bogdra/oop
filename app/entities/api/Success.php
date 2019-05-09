@@ -9,8 +9,8 @@ use App\Interfaces\ApiResponseInterface;
 
 class Success implements ApiResponseInterface
 {
-
     private $data;
+    private $status = 'success';
 
 
     public function __construct($data)
@@ -19,13 +19,23 @@ class Success implements ApiResponseInterface
     }
 
 
-    public function getResponse()
+    public function __toString()
     {
         return json_encode(
             [
-                'status' => substr(get_class($this), strrpos(get_class($this), '\\') + 1),
+                'status' => $this->status,
                 'data' => $this->data
             ]
         );
     }
+
+//    public function getJsonResponse()
+//    {
+//        return json_encode(
+//            [
+//                'status' => $this->status,
+//                'data' => $this->data
+//            ]
+//        );
+//    }
 }
