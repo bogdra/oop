@@ -6,6 +6,9 @@ namespace App\Controller;
 
 use \Core\Router;
 use \App\Entities\Currency;
+use \App\Entities\Success;
+use \App\Entities\Fail;
+use \App\Entities\Error;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
 use \App\Services\ECBCurrencyExchange;
@@ -15,10 +18,12 @@ use \App\Exception\RequestException;
 
 class ApiController extends Controller
 {
+    private $apiService;
 
     public function __construct()
     {
         parent::__construct();
+        $this->apiService = new ApiService();
     }
 
     /*
@@ -34,17 +39,22 @@ class ApiController extends Controller
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
             $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
 
-            $apiService = new ApiService('success', [
-                'ConvertedValue' => round((float)$currencyValue * $rate, 2),
-                'ConversionRate' => $rate
-            ]);
-            print_r($apiService->getResponse());
+
+            $this->apiService->setResponse(
+                new Success([
+                    'ConvertedValue' => round((float)$currencyValue * $rate, 2),
+                    'ConversionRate' => $rate
+                ])
+            );
 
         } catch (RequestException $requestException) {
-            echo $requestException->getApiMessage();
+            $this->apiService->setResponse(new Fail($requestException->getCustomMessage()));
+        } catch (CurrencyException $currencyException) {
+            $this->apiService->setResponse(new Fail($currencyException->getCustomMessage()));
         } catch (\Throwable $e) {
-            echo $e->getMessage();
+            $this->apiService->setResponse(new Fail($e->getMessage()));
         }
+        print_r($this->apiService->getResponse());
     }
 
 
@@ -58,22 +68,26 @@ class ApiController extends Controller
             Router::routeRuleValidation(func_get_args(), 'get/{alpha[3]}');
             list($get, $givenCurrency) = func_get_args();
 
-
             $currencyObj = new CurrencyService(new ECBCurrencyExchange);
             $response = $currencyObj
                 ->generateCollectionForCurrency(new Currency($givenCurrency))
                 ->formatCurrencyCollectionForApi();
 
-            $apiService = new ApiService('success', $response);
-           // var_dump($apiService->getResponse())->data;die();
-            print_r($apiService->getResponse()->getResponse());
+            $this->apiService->setResponse(new Success($response));
 
         } catch (RequestException $requestException) {
-            echo $requestException->getMessage();
+            $this->apiService->setResponse(
+                new Fail($requestException->getCustomMessage())
+            );
         } catch (CurrencyException $currencyException) {
-            echo $currencyException->getMessage();
+            $this->apiService->setResponse(
+                new Fail($currencyException->getCustomMessage())
+            );
         } catch (\Throwable $e) {
-            echo $e->getMessage();
+            $this->apiService->setResponse(
+                new Fail($e->getMessage())
+            );
         }
+        print_r($this->apiService->getResponse());
     }
 }

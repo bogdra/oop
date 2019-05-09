@@ -4,7 +4,7 @@ namespace Core;
 
 
 // Debug mode
-define('DEBUG', false);
+define('DEBUG', true);
 
 // Site title
 define('SITE_TITLE', 'OOP');
@@ -18,7 +18,7 @@ define('INPUT_SOURCE', 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-dail
 // DB credentials
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_PASS', 'qqqq');
 define('DB_NAME', 'oop');
 
 // Default Controllers
