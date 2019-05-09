@@ -31,7 +31,6 @@ class ComposerStaticInit97ebd05407eab91c8cd1f86227252402
         'App\\Services\\ApiService' => __DIR__ . '/../..' . '/app/services/ApiService.php',
         'App\\Services\\CurrencyService' => __DIR__ . '/../..' . '/app/services/CurrencyService.php',
         'App\\Services\\ECBCurrencyExchange' => __DIR__ . '/../..' . '/app/services/ECBCurrencyExchange.php',
-        'App\\Services\\ErrorService' => __DIR__ . '/../..' . '/app/services/ErrorService.php',
         'Core\\Db' => __DIR__ . '/../..' . '/core/Db.php',
         'Core\\Helper' => __DIR__ . '/../..' . '/core/Helper.php',
         'Core\\Router' => __DIR__ . '/../..' . '/core/Router.php',

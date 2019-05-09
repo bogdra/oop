@@ -26,6 +26,7 @@ class CurrencyService
     {
         $eurToDesiredCurrencyRate = 1 / $this->eurExchangeRates->getRateForCurrency($currency);
         $newCurrencyCollection = new CurrencyCollection($currency);
+
         /** @var $item ExchangeRate */
         foreach ($this->eurExchangeRates->getCurrencies() as $item) {
             //check if the currency Object is already in the eurExchangeRates Collection in order to not show it
@@ -60,15 +61,12 @@ class CurrencyService
 
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
-        try {
-            foreach ([$toCurrency, $fromCurrency] as $currency) {
-                $this->canExchange($currency);
-            }
-            $fromCurrencyToEurRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
-            $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
-        } catch (CurrencyException $currencyException) {
-            echo $currencyException->getMessage();
+        foreach ([$toCurrency, $fromCurrency] as $currency) {
+            $this->canExchange($currency);
         }
+        $fromCurrencyToEurRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
+        $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
+
         return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
     }
 
