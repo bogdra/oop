@@ -16,7 +16,8 @@ class HomeController extends Controller
 
     public function indexAction(): void
     {
-        try {
+        try
+        {
             $this->view->setTitle('Homepage');
 
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
@@ -26,7 +27,9 @@ class HomeController extends Controller
             ];
 
             $this->view->render('home/index', $params);
-        } catch (ViewException $viewException) {
+
+        } catch(ViewException $viewException)
+        {
             echo $viewException->getCustomMessage();
         }
     }
