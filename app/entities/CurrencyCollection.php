@@ -21,8 +21,6 @@ class CurrencyCollection
                 $this->add($item);
             }
         }
-        //insert into the EurExchangeRate the rate for EUR -> EUR
-        //|$this->add(new ExchangeRate($currency, 1));
     }
 
 
@@ -40,6 +38,8 @@ class CurrencyCollection
     public function add(ExchangeRate $exchangeRate): void
     {
         array_push($this->items, $exchangeRate);
+        // nu ar fi mai simplu sa avem un key pentru fiecare ExchangeRate Object, pentru a evita foreach()
+        // $this->items[$exchangeRate->getToCurrency] = $exchangeRate;
     }
 
 

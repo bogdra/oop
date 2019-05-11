@@ -6,6 +6,7 @@ namespace App\Entities;
 
 use App\Exception\CurrencyException;
 
+
 class Currency
 {
     private $currency;
@@ -22,6 +23,7 @@ class Currency
 
         $this->currency = $currency;
     }
+
 
     public function __toString(): string
     {

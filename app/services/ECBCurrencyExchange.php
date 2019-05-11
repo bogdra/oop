@@ -17,10 +17,12 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
 
     protected $url;
 
+
     public function __construct(string $url = INPUT_SOURCE)
     {
         $this->url = $url;
     }
+
 
     public function getEurCollection(): CurrencyCollection
     {
