@@ -22,6 +22,7 @@ class CurrencyService
         $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
     }
 
+
     public function generateCollectionForCurrency(Currency $currency): CurrencyCollection
     {
         $eurToDesiredCurrencyRate = 1 / $this->eurExchangeRates->getRateForCurrency($currency);
@@ -42,9 +43,9 @@ class CurrencyService
         return $newCurrencyCollection;
     }
 
-    //generates a new CurrencyCollection of a specific given currency
 
-    public function getExchangeRatesForSpecificCurrency(Currency $currency): array
+    //generates a new CurrencyCollection of a specific given currency
+    public function getExchangeRatesForSpecificCurrency(Currency $currency): CurrencyCollection
     {
         $rates = [];
         foreach ($this->eurExchangeRates->getSupportedCurrenciesCodes() as $item) {
@@ -52,13 +53,32 @@ class CurrencyService
             if ($item->__toString() == $currency->__toString()) {
                 continue;
             }
-            $parity = new \stdClass;
-            $parity->currencyTo = $item->__toString();
-            $parity->rate = $this->getExchangeRate($currency, new Currency($item));
-
-            $rates[] = (object)$parity;
+            $rates[] = new ExchangeRate($item, $this->getExchangeRate($currency, new Currency($item)));
         }
         return $rates;
+    }
+
+
+    public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
+    {
+        try {
+            foreach ([$toCurrency, $fromCurrency] as $currency) {
+                $this->canExchange($currency);
+            }
+            $fromCurrencyToEurRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
+            $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
+        } catch (CurrencyException $currencyException) {
+            echo $currencyException->getMessage();
+        }
+        return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
+    }
+
+
+    private function canExchange(Currency $currency): void
+    {
+        if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
+            throw new CurrencyException('the given Currency is not present in the array currencies');
+        }
     }
 
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
