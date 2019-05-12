@@ -2,6 +2,6 @@
 
 namespace App\Exception;
 
-class RequestException extends \Exception
+class RequestException extends CustomException
 {
 }

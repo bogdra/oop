@@ -27,6 +27,7 @@ class HomeController extends Controller
             ];
 
             $this->view->render('home/index', $params);
+
         } catch(ViewException $viewException)
         {
             echo $viewException->getCustomMessage();

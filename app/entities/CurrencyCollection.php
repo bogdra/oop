@@ -26,7 +26,7 @@ class CurrencyCollection
     //checks if the $currency Object is already present in the $item Object
     private function checkExchangeRateIsNotForCurrency(ExchangeRate $item, Currency $currency): bool
     {
-        if ($item->getToCurrency()->__toString() === $$currency->__toString()) {
+        if ($item->getToCurrency()->__toString() === $currency->__toString()) {
             return false;
         }
         return true;

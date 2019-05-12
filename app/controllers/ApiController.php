@@ -54,7 +54,11 @@ class ApiController extends Controller
         } catch (\Throwable $e) {
             $this->apiService->setResponse(new Fail($e->getMessage()));
         }
+<<<<<<< HEAD
+        echo($this->apiService->getResponse());
+=======
         print_r($this->apiService->getResponse());
+>>>>>>> ac55a8df8b550ebaba525311ee4b67707b5903c3
     }
 
 
@@ -88,6 +92,7 @@ class ApiController extends Controller
                 new Fail($e->getMessage())
             );
         }
-        print_r($this->apiService->getResponse());
+
+        echo($this->apiService->getResponse());
     }
 }
