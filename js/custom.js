@@ -24,7 +24,7 @@ function clearTable() {
 function updateCurrency($currency) {
    // console.log($currency);
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'api/exchange/get/' + $currency);
+    xhr.open('GET', 'Api/exchange/get/' + $currency);
     xhr.onload = function () {
         if (xhr.status === 200) {
             var data = JSON.parse(this.responseText);

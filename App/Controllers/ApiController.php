@@ -27,7 +27,7 @@ class ApiController extends Controller
     }
 
     /*
-     * Route used is /api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
+     * Route used is /Api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
      */
     public function convertAction(): void
     {
@@ -58,7 +58,7 @@ class ApiController extends Controller
 
 
     /*
-    * Route used is /api/exchange/get/{currency}
+    * Route used is /Api/exchange/get/{currency}
     */
     public function exchangeAction(): void
     {

@@ -54,7 +54,8 @@ class Router
             header('Location: ' . URL_ROOT . $location);
             exit();
         }
-        die('Header already sent. Killed execution');
+        throw new \App\Exceptions\RequestException('Header already sent.');
+       // die('Header already sent. Killed execution');
     }
 
 

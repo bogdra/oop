@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use App\Exception\ViewException;
+use App\Exceptions\ViewException;
 
 class View
 {
@@ -13,7 +13,7 @@ class View
 
     public function __construct()
     {
-        $this->viewsPath = ROOT . DS . 'app' . DS . 'views';
+        $this->viewsPath = ROOT . DS . 'App' . DS . 'Views';
         $this->title = SITE_TITLE;
     }
 
