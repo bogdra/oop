@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controllers;
 
 
 use \Core\Router;
@@ -12,8 +12,8 @@ use \App\Entities\Error;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
 use \App\Services\ECBCurrencyExchange;
-use \App\Exception\CurrencyException;
-use \App\Exception\RequestException;
+use \App\Exceptions\CurrencyException;
+use \App\Exceptions\RequestException;
 
 
 class ApiController extends Controller
@@ -54,11 +54,6 @@ class ApiController extends Controller
         } catch (\Throwable $e) {
             $this->apiService->setResponse(new Fail($e->getMessage()));
         }
-<<<<<<< HEAD
-        echo($this->apiService->getResponse());
-=======
-        print_r($this->apiService->getResponse());
->>>>>>> ac55a8df8b550ebaba525311ee4b67707b5903c3
     }
 
 
@@ -93,6 +88,6 @@ class ApiController extends Controller
             );
         }
 
-        echo($this->apiService->getResponse());
+      //  echo($this->apiService->getResponse());
     }
 }

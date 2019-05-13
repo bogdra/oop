@@ -6,6 +6,11 @@ namespace App\Interfaces;
 
 interface ApiResponseInterface
 {
-    public function __construct(string $data);
+    /**
+     * ApiResponseInterface constructor.
+     * @param $data array | string
+     */
+    public function __construct($data);
+
     public function __toString();
 }

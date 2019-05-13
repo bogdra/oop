@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controllers;
 
 use \Core\View;
 use \App\Exception\RequestException;

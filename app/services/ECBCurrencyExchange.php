@@ -7,10 +7,8 @@ namespace App\Services;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
-use App\Entities\EurExchangeRateCollection;
 use App\Interfaces\EurCurrencyExchangeInterface;
-use App\Exception\FileException;
-use Core\Helper;
+use App\Exceptions\FileException;
 
 class ECBCurrencyExchange implements EurCurrencyExchangeInterface
 {

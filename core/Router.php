@@ -9,16 +9,11 @@ class Router
     private static $controller;
     private static $action;
 
-    /**
-     * Router method to call the right conntroller / action
-     *
-     * @param array $urlElements
-     */
+
     public static function route(array $urlElements)
     {
-        $tempController = (isset($urlElements[0]) && $urlElements[0] != '') ? \ucfirst($urlElements[0]) . 'Controller' : DEFAULT_CONTROLLER . 'Controller';
-        self::$controller = 'App\Controller\\' . $tempController;
-
+        $controller = (isset($urlElements[0]) && $urlElements[0] != '') ? \ucfirst($urlElements[0]) . 'Controller' : DEFAULT_CONTROLLER . 'Controller';
+        self::$controller = 'App\Controllers\\' . $controller;
 
         self::$action = (isset($urlElements[1]) && $urlElements[1] != '') ? \lcfirst($urlElements[1]) . 'Action' : DEFAULT_ACTION . 'Action';
 
@@ -38,12 +33,8 @@ class Router
             self::redirect('Restricted/');
     }
 
-    /**
-     * Checks if the controller file exists and if so if the action required exists
-     *
-     * @return bool
-     */
-    public static function checkControllerAndActionExists()
+
+    public static function checkControllerAndActionExists(): bool
     {
         if (class_exists(self::$controller)) {
             $tempObject = new self::$controller;
@@ -55,12 +46,7 @@ class Router
         return false;
     }
 
-    /**
-     * Redirect the user to a specific page
-     *
-     * @param string $location
-     * @param int $status
-     */
+
     public static function redirect(string $location, int $status = 301)
     {
         if (!headers_sent()) {
@@ -70,6 +56,7 @@ class Router
         }
         die('Header already sent. Killed execution');
     }
+
 
     public static function routeRuleValidation(array $params, string $routeRule)
     {
@@ -114,7 +101,7 @@ class Router
                 }
             } //if the static elements of the route are not as agreed in the rule
             elseif (strtolower($ruleArray[$i]) != strtolower($params[$i])) {
-                throw new RequestException('Malformed Route. The route does not obey the set rule.');
+                throw new RequestException('Malformed route. The route does not conform the set rule.');
 
             }
         }

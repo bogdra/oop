@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Exception;
+namespace App\Exceptions;
 
 class CustomException extends \Exception
 {
     public function getCustomMessage()
     {
-        return (DEBUG) ? 'Generic ' . get_class($this) . ' Error' : $this->getMessage();
+        return (DEBUG) ?  $this->getMessage() : 'Generic ' . substr(strrchr(__CLASS__, "\\"), 1) . ' Error' ;
     }
 }

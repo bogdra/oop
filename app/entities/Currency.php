@@ -4,7 +4,7 @@
 namespace App\Entities;
 
 
-use App\Exception\CurrencyException;
+use App\Exceptions\CurrencyException;
 
 class Currency
 {

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
-use App\Exception\CurrencyException;
+use App\Exceptions\CurrencyException;
 use App\Interfaces\EurCurrencyExchangeInterface;
 
 class CurrencyService
@@ -73,6 +73,7 @@ class CurrencyService
 
     private function canExchange(Currency $currency): void
     {
+        var_dump($currency);
         if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
             throw new CurrencyException('the given Currency is not present in the array currencies');
         }

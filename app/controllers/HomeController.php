@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controllers;
 
-use App\Exception\ViewException;
+use App\Exceptions\ViewException;
 use App\Services\CurrencyService;
 use App\Services\ECBCurrencyExchange;
 

@@ -12,7 +12,7 @@ class Error implements ApiResponseInterface
     private $message;
     private $status = 'error';
 
-    public function __construct(string $message)
+    public function __construct($message)
     {
         $this->message = $message;
     }

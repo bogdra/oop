@@ -28,14 +28,4 @@ class Success implements ApiResponseInterface
             ]
         );
     }
-
-//    public function getJsonResponse()
-//    {
-//        return json_encode(
-//            [
-//                'status' => $this->status,
-//                'data' => $this->data
-//            ]
-//        );
-//    }
 }

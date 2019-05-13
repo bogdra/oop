@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controllers;
 
-use App\Exception\FileException;
+use App\Exceptions\FileException;
 use App\Services\ECBCurrencyExchange;
 use App\Entities\ExchangeRate;
 use \Core\Db;

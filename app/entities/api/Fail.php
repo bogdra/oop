@@ -13,7 +13,7 @@ class Fail implements ApiResponseInterface
     private $status = 'fail';
 
 
-    public function __construct(string $data)
+    public function __construct($data)
     {
         $this->data = $data;
     }
