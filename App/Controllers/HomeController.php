@@ -1,10 +1,12 @@
 <?php
 
+
 namespace App\Controllers;
 
-use App\Exceptions\ViewException;
+
 use App\Services\CurrencyService;
 use App\Services\ECBCurrencyExchange;
+
 
 class HomeController extends Controller
 {
@@ -16,21 +18,13 @@ class HomeController extends Controller
 
     public function indexAction(): void
     {
-        try
-        {
-            $this->view->setTitle('Homepage');
+        $this->view->setTitle('Homepage');
+        $currencyService = new CurrencyService(new ECBCurrencyExchange());
 
-            $currencyService = new CurrencyService(new ECBCurrencyExchange());
+        $params = [
+            'currencyArrayKeys' => $currencyService->getSupportedCurrencies(),
+        ];
 
-            $params = [
-                'currencyArrayKeys' => $currencyService->getSupportedCurrencies(),
-            ];
-
-            $this->view->render('home/index', $params);
-
-        } catch(ViewException $viewException)
-        {
-            echo $viewException->getCustomMessage();
-        }
+        $this->view->render('home/index', $params);
     }
 }
