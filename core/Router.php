@@ -1,8 +1,12 @@
 <?php
 
+
 namespace Core;
 
-use App\Exception\RequestException;
+
+use App\Exceptions\HeadersAlreadySentException;
+use App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
+
 
 class Router
 {
@@ -12,25 +16,29 @@ class Router
 
     public static function route(array $urlElements)
     {
-        $controller = (isset($urlElements[0]) && $urlElements[0] != '') ? \ucfirst($urlElements[0]) . 'Controller' : DEFAULT_CONTROLLER . 'Controller';
-        self::$controller = 'App\Controllers\\' . $controller;
+        try {
+            $controller = (isset($urlElements[0]) && $urlElements[0] != '') ? \ucfirst($urlElements[0]) . 'Controller' : DEFAULT_CONTROLLER . 'Controller';
+            self::$controller = 'App\Controllers\\' . $controller;
 
-        self::$action = (isset($urlElements[1]) && $urlElements[1] != '') ? \lcfirst($urlElements[1]) . 'Action' : DEFAULT_ACTION . 'Action';
+            self::$action = (isset($urlElements[1]) && $urlElements[1] != '') ? \lcfirst($urlElements[1]) . 'Action' : DEFAULT_ACTION . 'Action';
 
-        //TODO: needs rewrite
-        if (\count($urlElements) > 2) {
-            for ($i = 2; $i < \count($urlElements); $i++) {
-                if ($urlElements[$i] != '') {
-                    $params[] = $urlElements[$i];
+            //TODO: needs rewrite
+            if (\count($urlElements) > 2) {
+                for ($i = 2; $i < \count($urlElements); $i++) {
+                    if ($urlElements[$i] != '') {
+                        $params[] = $urlElements[$i];
+                    }
                 }
+            } else {
+                $params = [];
             }
-        } else {
-            $params = [];
-        }
 
-        (self::checkControllerAndActionExists()) ?
-            call_user_func_array([new self::$controller, self::$action], $params) :
-            self::redirect('Restricted/');
+            (self::checkControllerAndActionExists()) ?
+                call_user_func_array([new self::$controller, self::$action], $params) :
+                self::redirect('Restricted/');
+        } catch (HeadersAlreadySentException $e) {
+            throw $e;
+        }
     }
 
 
@@ -54,8 +62,7 @@ class Router
             header('Location: ' . URL_ROOT . $location);
             exit();
         }
-        throw new \App\Exceptions\RequestException('Header already sent.');
-       // die('Header already sent. Killed execution');
+        throw new HeadersAlreadySentException('The headers have already been sent.');
     }
 
 
@@ -68,7 +75,8 @@ class Router
 
         //compares the rule number of elements with the provided number of params
         if (count($ruleArray) != count($params)) {
-            throw new RequestException('Mismatch between rule and current number of parameters');
+            throw new DifferenceBetweenValidationRuleAndParametersException('Mismatch between 
+            the validation rule and number of parameters given to the controller');
         }
 
         for ($i = 0; $i < count($ruleArray); $i++) {
