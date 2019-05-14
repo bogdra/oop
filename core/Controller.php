@@ -28,8 +28,8 @@ class Controller
                 throw new InvalidRequestMethodException('The selected request method is not valid');
                 break;
             } elseif ($this->requestMethodUsed != $allowedMethod) {
-                throw new RequestMethodNotAllowedException('The request method ' . $this->requestMethodUsed . '
-                                            is not supported for this route');
+                throw new RequestMethodNotAllowedException
+                ('The request method ' . $this->requestMethodUsed . ' is not supported for this route');
             }
         }
     }

@@ -14,6 +14,8 @@ use \App\Services\ApiService;
 use \App\Services\ECBCurrencyExchange;
 use \App\Exceptions\CurrencyException;
 use \App\Exceptions\RequestException;
+use \App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
+use \App\Exceptions\LengthMismatchBetweenRuleAndParameterException;
 
 
 class ApiController extends Controller
@@ -27,7 +29,7 @@ class ApiController extends Controller
     }
 
     /*
-     * Route used is /Api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
+     * Route used is /api/convert/from/{currencyFrom}/to/{currencyTo}/value/{currencyValue}
      */
     public function convertAction(): void
     {
@@ -46,10 +48,11 @@ class ApiController extends Controller
                     'ConversionRate' => $rate
                 ])
             );
-
-        } catch (RequestException $requestException) {
-            $this->apiService->setResponse(new Fail($requestException->getCustomMessage()));
-        } catch (CurrencyException $currencyException) {
+        } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
+            $this->apiService->setResponse(new Fail($e->getCustomMessage()));
+        } catch (LengthMismatchBetweenRuleAndParameterException $e) {
+            $this->apiService->setResponse(new Fail($e->getCustomMessage()));
+        }catch (CurrencyException $currencyException) {
             $this->apiService->setResponse(new Fail($currencyException->getCustomMessage()));
         } catch (\Throwable $e) {
             $this->apiService->setResponse(new Fail($e->getMessage()));

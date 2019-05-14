@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use App\Exceptions\ViewException;
+use App\Exceptions\ViewFileNotFoundException;
 
 class View
 {
@@ -19,15 +19,20 @@ class View
 
     public function render(string $view, $params = [])
     {
-        $this->params = $params;
+        try {
+            $this->params = $params;
 
-        list($controller, $action) = explode('/', $view);
-        $viewPath = $this->viewsPath . DS . $controller . DS . $action . '.php';
+            list($controller, $action) = explode('/', $view);
+            $viewPath = $this->viewsPath . DS . $controller . DS . $action . '.php';
 
-        if (!file_exists($viewPath)) {
-            throw new ViewException("The view $view does not exists");
+            if (!file_exists($viewPath)) {
+                throw new ViewFileNotFoundException("The view $view does not exists");
+            } else {
+                include $viewPath;
+            }
+        } catch (ViewFileNotFoundException $e) {
+            //TODO: log error and kill execution or redirect to specific page
         }
-        include $viewPath;
     }
 
 
@@ -45,11 +50,16 @@ class View
 
     public function getPartial(string $partialName)
     {
-        $partialFullPath = $this->viewsPath . DS . 'partials' . DS . $partialName . '.php';
+        try {
+            $partialFullPath = $this->viewsPath . DS . 'partials' . DS . $partialName . '.php';
 
-        if (!file_exists($partialFullPath)) {
-            throw new ViewException("The partial html file,$partialFullPath does not exists");
+            if (!file_exists($partialFullPath)) {
+                throw new ViewFileNotFoundException("The partial html file, $partialFullPath does not exists");
+            } else {
+                include($partialFullPath);
+            }
+        } catch (ViewFileNotFoundException $e) {
+            //TODO: log error and kill execution
         }
-        include($partialFullPath);
     }
 }
