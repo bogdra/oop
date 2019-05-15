@@ -7,9 +7,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Exceptions\InvalidRequestMethodException;
 use \App\Exceptions\RequestMethodNotAllowedException;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\FirePHPHandler;
+
 
 
 class Controller
@@ -23,10 +21,6 @@ class Controller
     {
         $this->view = new View();
         $this->requestMethodUsed = $_SERVER['REQUEST_METHOD'];
-
-        $this->logger = new Logger('api');
-        $this->logger->pushHandler(new StreamHandler(__DIR__ . '/my_app.log', Logger::DEBUG));
-        $this->logger->pushHandler(new FirePHPHandler());
     }
 
 

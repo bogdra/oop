@@ -121,7 +121,7 @@ class Router
         }
         //extract the length if is set
         if (isset($matches[2])) {
-            $length = (int)Helper::get_string_between($matches[2], '[', ']');
+            $length = (int)Helper::get_string_between($matches[2][0], '[', ']');
         } else {
             $length = 0;
         }

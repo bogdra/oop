@@ -4,6 +4,8 @@
 namespace App\Controllers;
 
 
+use App\Exceptions\CurrencyCharacterTypeInvalidException;
+use App\Exceptions\CurrencyLengthInvalidException;
 use \Core\Router;
 use \App\Entities\Currency;
 use \App\Entities\Success;
@@ -12,11 +14,9 @@ use \App\Entities\Error;
 use \App\Services\CurrencyService;
 use \App\Services\ApiService;
 use \App\Services\ECBCurrencyExchange;
-use \App\Exceptions\CurrencyException;
 use \App\Exceptions\RequestException;
 use \App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
 use \App\Exceptions\LengthMismatchBetweenRuleAndParameterException;
-
 
 
 class ApiController extends Controller
@@ -43,31 +43,29 @@ class ApiController extends Controller
             $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
 
 
-            $this->apiService->setResponse(
-                new Success([
-                    'ConvertedValue' => round((float)$currencyValue * $rate, 2),
-                    'ConversionRate' => $rate
-                ])
-            );
+            echo(new Success([
+                'ConvertedValue' => round((float)$currencyValue * $rate, 2),
+                'ConversionRate' => $rate
+            ]));
 
         } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
             $this->logger->warning($e->getMessage());
-            $this->apiService->setResponse(new Fail($e->getCustomMessage()));
+            echo(new Fail($e->getCustomMessage()));
         } catch (LengthMismatchBetweenRuleAndParameterException $e) {
             $this->logger->warning($e->getMessage());
-            $this->apiService->setResponse(new Fail($e->getCustomMessage()));
+            echo(new Fail($e->getCustomMessage()));
         } catch (CurrencyException $currencyException) {
             $this->logger->warning($currencyException->getMessage());
-            $this->apiService->setResponse(new Fail($currencyException->getCustomMessage()));
+            echo(new Fail($currencyException->getCustomMessage()));
         } catch (\Throwable $e) {
             $this->logger->warning($e->getMessage());
-            $this->apiService->setResponse(new Fail($e->getMessage()));
+            echo(new Fail($e->getMessage()));
         }
     }
 
 
     /*
-    * Route used is /Api/exchange/get/{currency}
+    * Route used is /api/exchange/get/{currency}
     */
     public function exchangeAction(): void
     {
@@ -81,20 +79,17 @@ class ApiController extends Controller
                 ->generateCollectionForCurrency(new Currency($givenCurrency))
                 ->formatCurrencyCollectionForApi();
 
-            $this->apiService->setResponse(new Success($response));
+            echo(new Success($response));
 
-        } catch (CurrencyException $currencyException) {
-            $this->logger->warning($currencyException->getMessage());
-            $this->apiService->setResponse(
-                new Fail($currencyException->getCustomMessage())
-            );
+        } catch (CurrencyLengthInvalidException $currencyException) {
+            $this->logger->warning($currencyException->getCustomMessage());
+            echo(new Fail($currencyException->getCustomMessage()));
+        } catch (CurrencyCharacterTypeInvalidException $currencyException) {
+            $this->logger->warning($currencyException->getCustomMessage());
+            echo(new Fail($currencyException->getCustomMessage()));
         } catch (\Throwable $e) {
             $this->logger->warning($e->getMessage());
-            $this->apiService->setResponse(
-                new Fail($e->getMessage())
-            );
+            echo(new Fail($e->getMessage()));
         }
-
-        //  echo($this->apiService->getResponse());
     }
 }

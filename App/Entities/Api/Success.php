@@ -4,10 +4,10 @@
 namespace App\Entities;
 
 
-use App\Interfaces\ApiResponseInterface;
+use App\Interfaces\ApiResponseAbstract;
 
 
-class Success implements ApiResponseInterface
+class Success extends ApiResponseAbstract
 {
     private $data;
     private $status = 'success';
@@ -21,6 +21,7 @@ class Success implements ApiResponseInterface
 
     public function __toString()
     {
+        $this->sendHeaders();
         return json_encode(
             [
                 'status' => $this->status,
@@ -28,4 +29,5 @@ class Success implements ApiResponseInterface
             ]
         );
     }
+
 }

@@ -83,6 +83,7 @@ class CurrencyCollection
         return $this->fromCurrency;
     }
 
+
     //returns the array of ExchangeRate objects
     public function getCurrencies(): array
     {

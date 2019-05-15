@@ -4,10 +4,10 @@
 namespace App\Entities;
 
 
-use App\Interfaces\ApiResponseInterface;
+use App\Interfaces\ApiResponseAbstract;
 
 
-class Fail implements ApiResponseInterface
+class Fail extends ApiResponseAbstract
 {
     private $data;
     private $status = 'fail';
@@ -21,6 +21,7 @@ class Fail implements ApiResponseInterface
 
     public function __toString()
     {
+        $this->sendHeaders();
         return json_encode(
             [
                 'status' => $this->status,

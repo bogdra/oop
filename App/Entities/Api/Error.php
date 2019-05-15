@@ -4,21 +4,24 @@
 namespace App\Entities;
 
 
-use App\Interfaces\ApiResponseInterface;
+use App\Interfaces\ApiResponseAbstract;
 
 
-class Error implements ApiResponseInterface
+class Error extends ApiResponseAbstract
 {
     private $message;
     private $status = 'error';
+
 
     public function __construct($message)
     {
         $this->message = $message;
     }
 
+
     public function __toString()
     {
+        $this->sendHeaders();
         return json_encode(
             [
                 'status' => $this->status,
