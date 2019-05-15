@@ -5,13 +5,14 @@ namespace App\Services;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
-use App\Exceptions\CurrencyNotInArrayOfCurrencies;
+use App\Exceptions\CurrencyNotInPermitedCurrenciesException;
 use App\Interfaces\EurCurrencyExchangeInterface;
 
 class CurrencyService
 {
     public $currency;
     public $currencyObj;
+
 
     /** @var CurrencyCollection */
     private $eurExchangeRates;
@@ -21,6 +22,7 @@ class CurrencyService
     {
         $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
     }
+
 
     public function generateCollectionForCurrency(Currency $currency): CurrencyCollection
     {
@@ -73,9 +75,8 @@ class CurrencyService
 
     private function canExchange(Currency $currency): void
     {
-        var_dump($currency);
         if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
-            throw new CurrencyNotInArrayOfCurrencies
+            throw new CurrencyNotInPermitedCurrenciesException
             ('the given Currency is not present in the array currencies');
         }
     }

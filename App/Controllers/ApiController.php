@@ -16,24 +16,17 @@ use \App\Exceptions\CurrencyException;
 use \App\Exceptions\RequestException;
 use \App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
 use \App\Exceptions\LengthMismatchBetweenRuleAndParameterException;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\FirePHPHandler;
+
 
 
 class ApiController extends Controller
 {
     private $apiService;
-    private $logger;
 
     public function __construct()
     {
         parent::__construct();
         $this->apiService = new ApiService();
-
-        $this->logger = new Logger('api');
-        $this->logger->pushHandler(new StreamHandler(__DIR__ . '/my_app.log', Logger::DEBUG));
-        $this->logger->pushHandler(new FirePHPHandler());
     }
 
     /*

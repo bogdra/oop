@@ -8,7 +8,7 @@ use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
 use App\Interfaces\EurCurrencyExchangeInterface;
-use App\Exceptions\FileException;
+use App\Exceptions\RemoteExchangeFileNotFoundException;
 
 class ECBCurrencyExchange implements EurCurrencyExchangeInterface
 {
@@ -25,7 +25,8 @@ class ECBCurrencyExchange implements EurCurrencyExchangeInterface
     public function getEurCollection(): CurrencyCollection
     {
         if (!file_get_contents($this->url)) {
-            throw new FileException('The Exchange currency local file does not exists or could not be open');
+            throw new RemoteExchangeFileNotFoundException
+            ('The Exchange currency file does not exists or could not be open');
         }
 
         $eurExchangeRateCollection = new CurrencyCollection(new Currency('EUR'));
