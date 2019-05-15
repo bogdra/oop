@@ -26,15 +26,14 @@ class Router
             self::$action = (isset($urlElements[1]) && $urlElements[1] != '') ? \lcfirst($urlElements[1]) . 'Action' : DEFAULT_ACTION . 'Action';
 
             //TODO: needs rewrite
+            $params = [];
             if (\count($urlElements) > 2) {
                 for ($i = 2; $i < \count($urlElements); $i++) {
                     if ($urlElements[$i] != '') {
                         $params[] = $urlElements[$i];
                     }
                 }
-            } else {
-                $params = [];
-            }
+            } 
 
             (self::checkControllerAndActionExists()) ?
                 call_user_func_array([new self::$controller, self::$action], $params) :
