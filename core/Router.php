@@ -73,27 +73,29 @@ class Router
         //$routeRule = 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}';
         $regexRule = "/{(.*?(\[\d\])?)}/mi";
 
-        $ruleArray = \explode('/', $routeRule);
+        $arrayOfRuleElements = \explode('/', $routeRule);
 
         //compares the rule number of elements with the provided number of params
-        if (count($ruleArray) != \count($params)) {
+        if (\count($arrayOfRuleElements) != \count($params)) {
             throw new DifferenceBetweenValidationRuleAndParametersException
             ('Mismatch between the validation rule and number of parameters given to the controller');
         }
 
-        for ($i = 0; $i < count($ruleArray); $i++) {
+        for ($i = 0; $i < count($arrayOfRuleElements); $i++) {
             //if the elem in the RuleArray is a variable
-            if (\preg_match($regexRule, $ruleArray[$i], $matches, PREG_OFFSET_CAPTURE) == 1) {
+            if (\preg_match($regexRule, $arrayOfRuleElements[$i], $matches, PREG_OFFSET_CAPTURE) == 1) {
                 // extract the type of variable
                 if (isset($matches[1])) {
-                    $explodedTypeMatch = \explode('[', $matches[1][0]);
-                    $type = $explodedTypeMatch[0];
+//                    $explodedTypeMatch = \explode('[', $matches[1][0]);
+//                    $type = $explodedTypeMatch[0];
+                    $type = Helper::get_string_between($matches[1],'[',']');
                 }
                 //extract the length if is set
                 if (isset($matches[2])) {
-                    $explodedLengthMatch = \explode('[', $matches[2][0]);
-                    $explodedLengthMatch = \explode(']', $explodedLengthMatch[1]);
-                    $length = (int)$explodedLengthMatch[0];
+//                    $explodedLengthMatch = \explode('[', $matches[2][0]);
+//                    $explodedLengthMatch = \explode(']', $explodedLengthMatch[1]);
+//                    $length = (int)$explodedLengthMatch[0];
+                    $length =  (int)Helper::get_string_between($matches[2],'[',']');
                 } else {
                     $length = 0;
                 }
@@ -106,14 +108,14 @@ class Router
 
                 //check if the length is set in the rule for the current route parameter
                 if (isset($length) && $length > 0) {
-                    // if so , check if the parameter's length is equal if the one set in the rule
+                    // if so, check if the parameter's length is equal if the one set in the rule
                     if (\strlen($params[$i]) != $length) {
                         throw new LengthMismatchBetweenRuleAndParameterException
                         ('The length of ' . $params[$i] . ' is not correct');
                     }
                 }
             } //if the fixed elements of the route are not as agreed in the rule
-            elseif (\strtolower($ruleArray[$i]) !== \strtolower($params[$i])) {
+            elseif (\strtolower($arrayOfRuleElements[$i]) !== \strtolower($params[$i])) {
                 throw new FixedRouteElementsException
                 ('Malformed route. The route does not conform the set rule.');
 
