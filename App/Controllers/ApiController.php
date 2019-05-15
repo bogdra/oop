@@ -16,6 +16,9 @@ use \App\Exceptions\CurrencyException;
 use \App\Exceptions\RequestException;
 use \App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
 use \App\Exceptions\LengthMismatchBetweenRuleAndParameterException;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
 
 
 class ApiController extends Controller
@@ -26,6 +29,12 @@ class ApiController extends Controller
     {
         parent::__construct();
         $this->apiService = new ApiService();
+
+        $logger = new Logger('api');
+        $logger->pushHandler(new StreamHandler(__DIR__.'/my_app.log', Logger::DEBUG));
+        $logger->pushHandler(new FirePHPHandler());
+
+
     }
 
     /*
@@ -48,13 +57,18 @@ class ApiController extends Controller
                     'ConversionRate' => $rate
                 ])
             );
+
         } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
+            $logger->warning($e->getMessage());
             $this->apiService->setResponse(new Fail($e->getCustomMessage()));
         } catch (LengthMismatchBetweenRuleAndParameterException $e) {
+            $logger->warning($e->getMessage());
             $this->apiService->setResponse(new Fail($e->getCustomMessage()));
         }catch (CurrencyException $currencyException) {
+            $logger->warning($currencyException->getMessage());
             $this->apiService->setResponse(new Fail($currencyException->getCustomMessage()));
         } catch (\Throwable $e) {
+            $logger->warning($e->getMessage());
             $this->apiService->setResponse(new Fail($e->getMessage()));
         }
     }
@@ -78,14 +92,17 @@ class ApiController extends Controller
             $this->apiService->setResponse(new Success($response));
 
         } catch (RequestException $requestException) {
+            $logger->warning($requestException->getMessage());
             $this->apiService->setResponse(
                 new Fail($requestException->getCustomMessage())
             );
         } catch (CurrencyException $currencyException) {
+            $logger->warning($currencyException->getMessage());
             $this->apiService->setResponse(
                 new Fail($currencyException->getCustomMessage())
             );
         } catch (\Throwable $e) {
+            $logger->warning($e->getMessage());
             $this->apiService->setResponse(
                 new Fail($e->getMessage())
             );
