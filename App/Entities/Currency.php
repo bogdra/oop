@@ -4,7 +4,9 @@
 namespace App\Entities;
 
 
-use App\Exceptions\CurrencyException;
+use App\Exceptions\CurrencyLengthInvalidException;
+use App\Exceptions\CurrencyCharacterTypeInvalidException;
+
 
 class Currency
 {
@@ -13,15 +15,16 @@ class Currency
     public function __construct(string $currency)
     {
         if (strlen($currency) != 3) {
-            throw new CurrencyException('Currency length is wrong!');
+            throw new CurrencyLengthInvalidException('Currency length is wrong!');
         }
 
         if (!ctype_alpha($currency)) {
-            throw new CurrencyException('Currency cant contain anything other that alphabetic chars!');
+            throw new CurrencyCharacterTypeInvalidException('Currency cant contain anything other that alphabetic chars!');
         }
 
         $this->currency = $currency;
     }
+
 
     public function __toString(): string
     {
