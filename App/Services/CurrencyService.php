@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
-use App\Exceptions\CurrencyException;
+use App\Exceptions\CurrencyNotInArrayOfCurrencies;
 use App\Interfaces\EurCurrencyExchangeInterface;
 
 class CurrencyService
@@ -75,7 +75,8 @@ class CurrencyService
     {
         var_dump($currency);
         if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
-            throw new CurrencyException('the given Currency is not present in the array currencies');
+            throw new CurrencyNotInArrayOfCurrencies
+            ('the given Currency is not present in the array currencies');
         }
     }
 

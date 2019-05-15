@@ -37,8 +37,6 @@ class CurrencyCollection
     public function add(ExchangeRate $exchangeRate): void
     {
         array_push($this->items, $exchangeRate);
-        // nu ar fi mai simplu sa avem un key pentru fiecare ExchangeRate Object, pentru a evita foreach()
-        // $this->items[$exchangeRate->getToCurrency] = $exchangeRate;
     }
 
 
