@@ -33,7 +33,7 @@ class Router
                         $params[] = $urlElements[$i];
                     }
                 }
-            } 
+            }
 
             (self::checkControllerAndActionExists()) ?
                 call_user_func_array([new self::$controller, self::$action], $params) :
@@ -84,26 +84,13 @@ class Router
         for ($i = 0; $i < count($arrayOfRuleElements); $i++) {
             //if the elem in the RuleArray is a variable
             if (\preg_match($regexRule, $arrayOfRuleElements[$i], $matches, PREG_OFFSET_CAPTURE) == 1) {
-                // extract the type of variable
-                if (isset($matches[1])) {
-//                    $explodedTypeMatch = \explode('[', $matches[1][0]);
-//                    $type = $explodedTypeMatch[0];
-                    $type = Helper::get_string_between($matches[1],'[',']');
-                }
-                //extract the length if is set
-                if (isset($matches[2])) {
-//                    $explodedLengthMatch = \explode('[', $matches[2][0]);
-//                    $explodedLengthMatch = \explode(']', $explodedLengthMatch[1]);
-//                    $length = (int)$explodedLengthMatch[0];
-                    $length =  (int)Helper::get_string_between($matches[2],'[',']');
-                } else {
-                    $length = 0;
-                }
+
+                list($type, $length) = self::extractRuleTypeAndLength($matches);
 
                 //check if the variable param is of the type declared in the rule
                 if (!\call_user_func('ctype_' . $type, $params[$i])) {
                     throw new TypeMismatchBetweenRuleForParameterException
-                    ('Url parameter ' . $params[$i] . ' needs to be formed from ' . $type . ' characters');
+                    ('Url parameter ' . $params[$i] . ' needs to be formed from ' . $type . ' characters.');
                 }
 
                 //check if the length is set in the rule for the current route parameter
@@ -121,5 +108,24 @@ class Router
 
             }
         }
+    }
+
+    /**
+     * returns an array with rule and length
+     */
+    private static function extractRuleTypeAndLength($matches): array
+    {
+        // extract the type of variable
+        if (isset($matches[1])) {
+            $type = (\explode('[', $matches[1][0]))[0];
+        }
+        //extract the length if is set
+        if (isset($matches[2])) {
+            $length = (int)Helper::get_string_between($matches[2], '[', ']');
+        } else {
+            $length = 0;
+        }
+
+        return [$type, $length];
     }
 }
