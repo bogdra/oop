@@ -52,7 +52,7 @@ class CurrencyCollection
     }
 
 
-    public function hasCurrencyRate(Currency $currency): bool
+    public function hasParity(Currency $currency): bool
     {
         /** @var Currency $item */
         foreach ($this->getSupportedCurrenciesCodes() as $item) {

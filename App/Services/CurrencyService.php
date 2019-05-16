@@ -96,7 +96,7 @@ class CurrencyService
 
     private function canExchange(Currency $currency): void
     {
-        if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
+        if (!$this->eurExchangeRates->hasParity($currency)) {
             throw new CurrencyNotInPermittedCurrenciesException
             ('the given currency ('.$currency.') is not present in the array currencies');
         }

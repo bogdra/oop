@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\Db;
+namespace App\Exceptions\Persistance;
 
 
 use App\Exceptions\CustomException;

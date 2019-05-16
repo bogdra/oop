@@ -18,6 +18,7 @@ use \App\Exceptions\Request\LengthMismatchBetweenRuleAndParameterException;
 use App\Exceptions\Currency\CurrencyCharacterTypeInvalidException;
 use App\Exceptions\Currency\CurrencyLengthInvalidException;
 use App\Exceptions\Request\TypeMismatchBetweenRuleForParameterException;
+use App\Exceptions\Currency\CurrencyNotInPermittedCurrenciesException;
 
 
 class ApiController extends Controller
@@ -41,8 +42,11 @@ class ApiController extends Controller
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = func_get_args();
 
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
-            $rate = $currencyService->getExchangeRate(new Currency(strtoupper($fromCurrency)),
-                new Currency(strtoupper($toCurrency)));
+
+            $rate = $currencyService->getExchangeRate(
+                new Currency(strtoupper($fromCurrency)),
+                new Currency(strtoupper($toCurrency))
+            );
 
             echo(new Success([
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
@@ -52,6 +56,7 @@ class ApiController extends Controller
         } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
             $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
+
         } catch (TypeMismatchBetweenRuleForParameterException $e) {
             $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));

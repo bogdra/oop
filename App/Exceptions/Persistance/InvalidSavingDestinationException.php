@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Exceptions\File;
+namespace App\Exceptions\Persistance;
 
 
 use App\Exceptions\CustomException;

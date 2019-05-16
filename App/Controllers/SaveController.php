@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use App\Services\ECBCurrencyExchange;
 use App\Entities\ExchangeRate;
-use App\Exceptions\DbSavingOperationFailedException;
-use App\Exceptions\InvalidSavingDestinationException;
-use App\Exceptions\RemoteExchangeFileNotFoundException;
+use App\Exceptions\Persistance\DbSavingOperationFailedException;
+use App\Exceptions\Persistance\InvalidSavingDestinationException;
+use App\Exceptions\File\RemoteExchangeFileNotFoundException;
 use App\Traits\Log;
 use \Core\Db;
 
@@ -24,7 +24,6 @@ class SaveController extends Controller
     public function exchangeAction(string $destination): void
     {
         try {
-
             $eurCollection = (new ECBCurrencyExchange())->getEurCollection();
 
             switch ($destination) {
@@ -50,13 +49,13 @@ class SaveController extends Controller
                     throw new InvalidSavingDestinationException("Please specify where to save the currency rates");
             }
         } catch (InvalidSavingDestinationException $e) {
-            $this->logger->warning($e->getMessage());
+            $this->warning($e->getMessage());
             echo $e->getCustomMessage();
         } catch (DbSavingOperationFailedException $e) {
-            $this->logger->warning($e->getMessage());
+            $this->warning($e->getMessage());
             echo $e->getCustomMessage();
         } catch (RemoteExchangeFileNotFoundException $e) {
-            $this->logger->warning($e->getMessage());
+            $this->warning($e->getMessage());
             echo $e->getCustomMessage();
         }
     }
