@@ -1,8 +1,11 @@
 <?php
 
+
 namespace Core;
 
+
 use App\Interfaces\PersistenceInterface;
+
 
 class Db implements PersistenceInterface
 {
@@ -10,6 +13,7 @@ class Db implements PersistenceInterface
     private $queryHolder;
     private $pdoConn;
     public $error, $result, $count;
+
 
     private function __construct()
     {
@@ -24,6 +28,7 @@ class Db implements PersistenceInterface
             die($e->getMessage());
         }
     }
+
 
     public static function init() :DB
     {
@@ -62,6 +67,7 @@ class Db implements PersistenceInterface
 
 
     }
+
 
     /**
      * @param $table
@@ -135,6 +141,7 @@ class Db implements PersistenceInterface
         return false;
     }
 
+
     public function update(string $table, int $id, $fields = []) {
         $fieldString = '';
         $values = [];
@@ -151,6 +158,7 @@ class Db implements PersistenceInterface
         return false;
     }
 
+
     public function delete(string $table, int $id) {
         $sql = "DELETE FROM {$table} WHERE id = {$id}";
         if(!$this->query($sql)->error()) {
@@ -159,10 +167,12 @@ class Db implements PersistenceInterface
         return false;
     }
 
+
     public function count()
     {
         return count($this->result);
     }
+
 
     public function getResult()
     {

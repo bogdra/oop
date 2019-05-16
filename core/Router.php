@@ -113,6 +113,7 @@ class Router
         }
     }
 
+
     /**
      * returns an array with rule and length
      */

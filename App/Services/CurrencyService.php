@@ -1,15 +1,18 @@
 <?php
 
+
 namespace App\Services;
+
 
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
-use App\Exceptions\CurrencyCharacterTypeInvalidException;
-use App\Exceptions\CurrencyLengthInvalidException;
-use App\Exceptions\CurrencyNotInPermitedCurrenciesException;
 use App\Interfaces\EurCurrencyExchangeInterface;
+use App\Exceptions\Currency\CurrencyNotInPermittedCurrenciesException;
+use App\Exceptions\Currency\CurrencyCharacterTypeInvalidException;
+use App\Exceptions\Currency\CurrencyLengthInvalidException;
 use App\Traits\Log;
+
 
 class CurrencyService
 {
@@ -17,6 +20,7 @@ class CurrencyService
     public $currencyObj;
 
     use Log;
+
 
     /** @var CurrencyCollection */
     private $eurExchangeRates;
@@ -53,7 +57,7 @@ class CurrencyService
     //generates a new CurrencyCollection of a specific given currency
     public function getExchangeRatesForSpecificCurrency(Currency $currency): CurrencyCollection
     {
-        try{
+        try {
             $rates = [];
             foreach ($this->eurExchangeRates->getSupportedCurrenciesCodes() as $item) {
 
@@ -62,10 +66,6 @@ class CurrencyService
                 }
                 $rates[] = new ExchangeRate($item, $this->getExchangeRate($currency, new Currency($item)));
             }
-        } catch (CurrencyNotInPermitedCurrenciesException $e) {
-            $this->logger->warning($e->getMessage());
-            //TODO: redirect to error page
-
         } catch (CurrencyLengthInvalidException $e) {
             $this->logger->warning($e->getMessage());
             //TODO: redirect to error page
@@ -84,25 +84,23 @@ class CurrencyService
 
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
-        try {
-            foreach ([$toCurrency, $fromCurrency] as $currency) {
-                $this->canExchange($currency);
-            }
-            $fromCurrencyToEurRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
-            $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
-
-            return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
-        } catch (\Throwable $e) {
-            throw $e;
+        foreach ([$toCurrency, $fromCurrency] as $currency) {
+            $this->canExchange($currency);
         }
+        $fromCurrencyToEurRate = 1 / $this->eurExchangeRates->getRateForCurrency(new Currency($fromCurrency));
+        $forCurrencyRate = $this->eurExchangeRates->getRateForCurrency(new Currency($toCurrency));
+
+        return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
     }
 
 
     private function canExchange(Currency $currency): void
     {
+        //var_dump($this->eurExchangeRates);die();
         if (!$this->eurExchangeRates->hasCurrencyRate($currency)) {
-            throw new CurrencyNotInPermitedCurrenciesException
-            ('the given Currency is not present in the array currencies');
+
+            throw new CurrencyNotInPermittedCurrenciesException
+            ('the given currency ('.$currency.') is not present in the array currencies');
         }
     }
 

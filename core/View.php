@@ -3,9 +3,12 @@
 namespace Core;
 
 use App\Exceptions\ViewFileNotFoundException;
+use App\Traits\Log;
 
 class View
 {
+    use Log;
+
     protected $viewsPath;
     protected $title;
     public $params;
@@ -16,6 +19,7 @@ class View
         $this->viewsPath = ROOT . DS . 'App' . DS . 'Views';
         $this->title = SITE_TITLE;
     }
+
 
     public function render(string $view, $params = [])
     {
@@ -28,10 +32,11 @@ class View
             if (!file_exists($viewPath)) {
                 throw new ViewFileNotFoundException("The view $view does not exists");
             } else {
-                include $viewPath;
+                include_once($viewPath);
             }
         } catch (ViewFileNotFoundException $e) {
-            //TODO: log error and kill execution or redirect to specific page
+            $this->logger->warning($e->getMessage());
+            //TODO: kill execution or redirect to specific page
         }
     }
 
@@ -56,10 +61,11 @@ class View
             if (!file_exists($partialFullPath)) {
                 throw new ViewFileNotFoundException("The partial html file, $partialFullPath does not exists");
             } else {
-                include($partialFullPath);
+                include_once($partialFullPath);
             }
         } catch (ViewFileNotFoundException $e) {
-            //TODO: log error and kill execution
+            $this->logger->warning($e->getMessage());
+            //TODO: kill execution
         }
     }
 }
