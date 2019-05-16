@@ -9,12 +9,10 @@ use \App\Exceptions\InvalidRequestMethodException;
 use \App\Exceptions\RequestMethodNotAllowedException;
 
 
-
 class Controller
 {
     public $view;
     public $requestMethodUsed;
-    protected $logger;
 
 
     public function __construct()

@@ -3,6 +3,7 @@
 
 namespace App\Traits;
 
+
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
@@ -10,8 +11,8 @@ use Monolog\Handler\FirePHPHandler;
 
 trait Log
 {
-
-    private $logger;
+    /** @var Logger $logger */
+    protected $logger;
 
 
     public function __construct(string $type = 'default')
@@ -19,10 +20,5 @@ trait Log
         $this->logger = new Logger($type);
         $this->logger->pushHandler(new StreamHandler(dirname(__DIR__) . '/logs/logs.log', Logger::DEBUG));
         $this->logger->pushHandler(new FirePHPHandler());
-    }
-
-    public function log(string $message):void
-    {
-        $this->logger->
     }
 }

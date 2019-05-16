@@ -27,12 +27,15 @@ class Router
 
             //TODO: needs rewrite
             $params = [];
+
             if (\count($urlElements) > 2) {
                 for ($i = 2; $i < \count($urlElements); $i++) {
                     if ($urlElements[$i] != '') {
                         $params[] = $urlElements[$i];
                     }
                 }
+            } else {
+                $params = [];
             }
 
             (self::checkControllerAndActionExists()) ?
