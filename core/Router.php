@@ -4,11 +4,11 @@
 namespace Core;
 
 
-use App\Exceptions\HeadersAlreadySentException;
-use App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
-use App\Exceptions\TypeMismatchBetweenRuleForParameterException;
-use App\Exceptions\LengthMismatchBetweenRuleAndParameterException;
-use App\Exceptions\FixedRouteElementsException;
+use App\Exceptions\Request\HeadersAlreadySentException;
+use App\Exceptions\Request\DifferenceBetweenValidationRuleAndParametersException;
+use App\Exceptions\Request\TypeMismatchBetweenRuleForParameterException;
+use App\Exceptions\Request\LengthMismatchBetweenRuleAndParameterException;
+use App\Exceptions\Request\FixedRouteElementsException;
 
 
 class Router
@@ -107,11 +107,11 @@ class Router
             } //if the fixed elements of the route are not as agreed in the rule
             elseif (\strtolower($arrayOfRuleElements[$i]) !== \strtolower($params[$i])) {
                 throw new FixedRouteElementsException
-                ('Malformed route. The route does not conform the set rule.');
-
+                ('Malformed route. The route does not conform the set rule. Missing '.$arrayOfRuleElements[$i]);
             }
         }
     }
+
 
     /**
      * returns an array with rule and length
@@ -124,7 +124,7 @@ class Router
         }
         //extract the length if is set
         if (isset($matches[2])) {
-            $length = (int)Helper::get_string_between($matches[2][0], '[', ']');
+            $length = (int)Helper::getStringBetween($matches[2][0], '[', ']');
         } else {
             $length = 0;
         }

@@ -2,20 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Exceptions\FileException;
 use App\Services\ECBCurrencyExchange;
 use App\Entities\ExchangeRate;
 use App\Exceptions\DbSavingOperationFailedException;
 use App\Exceptions\InvalidSavingDestinationException;
 use App\Exceptions\RemoteExchangeFileNotFoundException;
+use App\Traits\Log;
 use \Core\Db;
 
 class SaveController extends Controller
 {
+    use Log;
+
+
     public function __construct()
     {
         parent::__construct();
     }
+
 
     public function exchangeAction(string $destination): void
     {

@@ -56,7 +56,7 @@ class CurrencyCollection
     {
         /** @var Currency $item */
         foreach ($this->getSupportedCurrenciesCodes() as $item) {
-            if ($item->__toString() === $currency->__toString()) {
+            if ($item->__toString() == $currency->__toString()) {
                 return true;
             }
         }

@@ -5,20 +5,26 @@ namespace App\Controllers;
 
 
 use \Core\Router;
+use App\Traits\Log;
 use \App\Entities\Currency;
 use \App\Entities\Success;
 use \App\Entities\Fail;
 use \App\Entities\Error;
 use \App\Services\CurrencyService;
 use \App\Services\ECBCurrencyExchange;
-use \App\Exceptions\DifferenceBetweenValidationRuleAndParametersException;
-use \App\Exceptions\LengthMismatchBetweenRuleAndParameterException;
-use App\Exceptions\CurrencyCharacterTypeInvalidException;
-use App\Exceptions\CurrencyLengthInvalidException;
+use App\Exceptions\Request\FixedRouteElementsException;
+use \App\Exceptions\Request\DifferenceBetweenValidationRuleAndParametersException;
+use \App\Exceptions\Request\LengthMismatchBetweenRuleAndParameterException;
+use App\Exceptions\Currency\CurrencyCharacterTypeInvalidException;
+use App\Exceptions\Currency\CurrencyLengthInvalidException;
+use App\Exceptions\Request\TypeMismatchBetweenRuleForParameterException;
 
 
 class ApiController extends Controller
 {
+    use Log;
+
+
     public function __construct()
     {
         parent::__construct();
@@ -35,30 +41,28 @@ class ApiController extends Controller
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = func_get_args();
 
             $currencyService = new CurrencyService(new ECBCurrencyExchange());
-            $rate = $currencyService->getExchangeRate(new Currency($fromCurrency), new Currency($toCurrency));
-
+            $rate = $currencyService->getExchangeRate(new Currency(strtoupper($fromCurrency)),
+                new Currency(strtoupper($toCurrency)));
 
             echo(new Success([
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
                 'ConversionRate' => $rate
             ]));
 
-
         } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
-            $this->logger->warning($e->getMessage());
-            //TODO: would e nice to use $this->view->render(null, new Fail($e->getCustomMessage()))
+            $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
-        } catch (LengthMismatchBetweenRuleAndParameterException $e) {
-            $this->logger->warning($e->getMessage());
-            //TODO: would e nice to use $this->view->render(null, new Fail($e->getCustomMessage()))
+        } catch (TypeMismatchBetweenRuleForParameterException $e) {
+            $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
-        } catch (CurrencyException $currencyException) {
-            $this->logger->warning($currencyException->getMessage());
-            //TODO: would e nice to use $this->view->render(null, new Fail($e->getCustomMessage()))
-            echo(new Fail($currencyException->getCustomMessage()));
+        }  catch (LengthMismatchBetweenRuleAndParameterException $e) {
+            $this->warning($e->getMessage());
+            echo(new Fail($e->getCustomMessage()));
+        } catch (FixedRouteElementsException $e) {
+            $this->warning($e->getMessage());
+            echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {
-            $this->logger->warning($e->getMessage());
-            //TODO: would e nice to use $this->view->render(null, new Fail($e->getCustomMessage()))
+            $this->warning($e->getMessage());
             echo(new Fail($e->getMessage()));
         }
     }
@@ -78,21 +82,16 @@ class ApiController extends Controller
             $response = $currencyObj
                 ->generateCollectionForCurrency(new Currency($givenCurrency))
                 ->formatCurrencyCollectionForApi();
-
             echo(new Success($response));
-            //TODO: would e nice to use $this->view->render(null, new Success($response)))
 
-        } catch (CurrencyLengthInvalidException $currencyException) {
-            $this->logger->warning($currencyException->getCustomMessage());
-            //TODO: would e nice to use $this->view->render(null, new Success($response)))
-            echo(new Fail($currencyException->getCustomMessage()));
-        } catch (CurrencyCharacterTypeInvalidException $currencyException) {
-            $this->logger->warning($currencyException->getCustomMessage());
-            //TODO: would e nice to use $this->view->render(null, new Success($response)))
-            echo(new Fail($currencyException->getCustomMessage()));
+        } catch (CurrencyLengthInvalidException $e) {
+            $this->logger->warning($e->getMessage());
+            echo(new Fail($e->getCustomMessage()));
+        } catch (CurrencyCharacterTypeInvalidException $e) {
+            $this->logger->warning($e->getMessage());
+            echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {
             $this->logger->warning($e->getMessage());
-            //TODO: would e nice to use $this->view->render(null, new Success($response)))
             echo(new Fail($e->getMessage()));
         }
     }

@@ -4,8 +4,8 @@
 namespace App\Entities;
 
 
-use App\Exceptions\CurrencyLengthInvalidException;
-use App\Exceptions\CurrencyCharacterTypeInvalidException;
+use App\Exceptions\Currency\CurrencyLengthInvalidException;
+use App\Exceptions\Currency\CurrencyCharacterTypeInvalidException;
 
 
 class Currency
