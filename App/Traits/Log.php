@@ -14,7 +14,7 @@ trait Log
     protected $logger;
 
 
-    private function getLogger(string $type = 'default')
+    private function getLogger(string $type )
     {
         if (!$this->logger) {
             $this->logger = new Logger($type);
@@ -23,15 +23,24 @@ trait Log
         return $this->logger;
     }
 
+    public function critical(string $message)
+    {
+        return $this->getLogger('default')->warning($message);
+    }
 
     public function warning(string $message)
     {
-        return $this->getLogger()->warning($message);
+        return $this->getLogger('default')->warning($message);
     }
 
-
-    public function critical(string $message)
+    public function alert(string $message)
     {
-        return $this->getLogger()->warning($message);
+        return $this->getLogger('default')->warning($message);
     }
+
+    public function emergency(string $message)
+    {
+        return $this->getLogger('default')->warning($message);
+    }
+
 }
