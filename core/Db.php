@@ -5,15 +5,19 @@ namespace Core;
 
 
 use App\Interfaces\PersistenceInterface;
+use App\Traits\Log;
 
 
 class Db implements PersistenceInterface
 {
+
+    use Log;
+
+
     public static $instance;
     private $queryHolder;
     private $pdoConn;
     public $error, $result, $count;
-
 
     private function __construct()
     {
@@ -25,7 +29,9 @@ class Db implements PersistenceInterface
         }
         catch(\PDOException $e)
         {
-            die($e->getMessage());
+            $this->emergency($e->getMessage());
+            echo($e->getMessage());
+
         }
     }
 

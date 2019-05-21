@@ -56,7 +56,6 @@ class ApiController extends Controller
         } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
             $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
-
         } catch (TypeMismatchBetweenRuleForParameterException $e) {
             $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
@@ -67,7 +66,7 @@ class ApiController extends Controller
             $this->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {
-            $this->warning($e->getMessage());
+            $this->alert($e->getMessage());
             echo(new Fail($e->getMessage()));
         }
     }
@@ -96,7 +95,7 @@ class ApiController extends Controller
             $this->logger->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {
-            $this->logger->warning($e->getMessage());
+            $this->logger->alert($e->getMessage());
             echo(new Fail($e->getMessage()));
         }
     }

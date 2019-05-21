@@ -5,7 +5,7 @@ namespace App\Interfaces;
 interface PersistenceInterface extends \Countable
 
 {
-    public function read(string $tableName, $params = []);
+    public function read(string $table, $params = []);
 
     public function insert(string $tableName, $params = []);
 
