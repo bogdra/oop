@@ -35,6 +35,7 @@ trait Log
 
     public function alert(string $message)
     {
+
         return $this->getLogger('default')->warning($message);
     }
 
