@@ -8,7 +8,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 
-trait Log
+trait LoggingTrait
 {
     /** @var Logger $logger */
     protected $logger;

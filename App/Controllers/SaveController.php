@@ -8,16 +8,17 @@ use App\Exceptions\Persistance\DbSavingOperationFailedException;
 use App\Exceptions\Persistance\InvalidSavingDestinationException;
 use App\Exceptions\File\RemoteExchangeFileNotFoundException;
 use App\Traits\Log;
+use App\Traits\LoggingTrait;
 use \Core\Db;
 
 class SaveController extends Controller
 {
-    use Log;
+    use LoggingTrait;
 
 
     public function __construct()
     {
-        parent::__construct();
+        $this->allowedRequestMethods();
     }
 
 

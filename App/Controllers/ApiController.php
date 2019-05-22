@@ -5,7 +5,8 @@ namespace App\Controllers;
 
 
 use \Core\Router;
-use App\Traits\Log;
+use App\Traits\LogTrait;
+use App\Traits\LoggingTrait;
 use \App\Entities\Currency;
 use \App\Entities\Success;
 use \App\Entities\Fail;
@@ -23,7 +24,7 @@ use App\Exceptions\Currency\CurrencyNotInPermittedCurrenciesException;
 
 class ApiController extends Controller
 {
-    use Log;
+    use LoggingTrait;
 
 
     public function __construct()
