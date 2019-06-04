@@ -10,10 +10,6 @@ use App\Services\ECBCurrencyExchange;
 
 class HomeController extends Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
 
     public function indexAction(): void
