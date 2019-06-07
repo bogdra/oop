@@ -7,6 +7,6 @@ namespace App\Exceptions\View;
 use App\Exceptions\CustomException;
 
 
-class ViewFileNotFoundException extends CustomException
+class FileNotFoundException extends CustomException
 {
 }

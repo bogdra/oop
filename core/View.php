@@ -2,12 +2,12 @@
 
 namespace Core;
 
-use App\Exceptions\ViewFileNotFoundException;
-use App\Traits\Log;
+use App\Exceptions\View\FileNotFoundException;
+use App\Traits\LoggingTrait;
 
 class View
 {
-    use Log;
+    use LoggingTrait;
 
     protected $viewsPath;
     protected $title;
@@ -30,11 +30,11 @@ class View
             $viewPath = $this->viewsPath . DS . $controller . DS . $action . '.php';
 
             if (!file_exists($viewPath)) {
-                throw new ViewFileNotFoundException("The view $view does not exists");
+                throw new FileNotFoundException("The view $view does not exists");
             } else {
                 include_once($viewPath);
             }
-        } catch (ViewFileNotFoundException $e) {
+        } catch (FileNotFoundException $e) {
             $this->logger->warning($e->getMessage());
             //TODO: kill execution or redirect to specific page
         }
@@ -59,11 +59,11 @@ class View
             $partialFullPath = $this->viewsPath . DS . 'partials' . DS . $partialName . '.php';
 
             if (!file_exists($partialFullPath)) {
-                throw new ViewFileNotFoundException("The partial html file, $partialFullPath does not exists");
+                throw new FileNotFoundException("The partial html file, $partialFullPath does not exists");
             } else {
                 include_once($partialFullPath);
             }
-        } catch (ViewFileNotFoundException $e) {
+        } catch (FileNotFoundException $e) {
             $this->logger->warning($e->getMessage());
             //TODO: kill execution
         }

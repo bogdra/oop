@@ -48,6 +48,7 @@ class ApiController extends Controller
                 new Currency(strtoupper($fromCurrency)),
                 new Currency(strtoupper($toCurrency))
             );
+            var_dump($rate);die;
 
             echo(new Success([
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),

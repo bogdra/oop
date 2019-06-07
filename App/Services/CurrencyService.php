@@ -11,7 +11,7 @@ use App\Interfaces\EurCurrencyExchangeInterface;
 use App\Exceptions\Currency\CurrencyNotInPermittedCurrenciesException;
 use App\Exceptions\Currency\CurrencyCharacterTypeInvalidException;
 use App\Exceptions\Currency\CurrencyLengthInvalidException;
-use App\Traits\Log;
+use App\Traits\LoggingTrait;
 
 
 class CurrencyService
@@ -19,7 +19,7 @@ class CurrencyService
     public $currency;
     public $currencyObj;
 
-    use Log;
+    use LoggingTrait;
 
 
     /** @var CurrencyCollection */
