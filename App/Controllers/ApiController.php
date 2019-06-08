@@ -38,7 +38,7 @@ class ApiController extends Controller
     public function convertAction(): void
     {
         try {
-            $this->allowedRequestMethods(['GET']);
+            $this->allowedRequestMethods('GET');
             Router::routeRuleValidation(func_get_args(), 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = func_get_args();
 
@@ -48,7 +48,7 @@ class ApiController extends Controller
                 new Currency(strtoupper($fromCurrency)),
                 new Currency(strtoupper($toCurrency))
             );
-            var_dump($rate);die;
+           // var_dump($rate);die;
 
             echo(new Success([
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
@@ -80,7 +80,7 @@ class ApiController extends Controller
     public function exchangeAction(): void
     {
         try {
-            $this->allowedRequestMethods(['GET']);
+            $this->allowedRequestMethods('GET');
             Router::routeRuleValidation(func_get_args(), 'get/{alpha[3]}');
             list($get, $givenCurrency) = func_get_args();
 
@@ -97,6 +97,7 @@ class ApiController extends Controller
             $this->logger->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {
+            var_dump($e);die;
             $this->logger->alert($e->getMessage());
             echo(new Fail($e->getMessage()));
         }
