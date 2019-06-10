@@ -4,10 +4,11 @@
 namespace App\Controllers;
 
 
+use App\Entities\CommissionsCollection;
 use \Core\Router;
-use App\Traits\LogTrait;
 use App\Traits\LoggingTrait;
 use \App\Entities\Currency;
+use \App\Entities\Commission;
 use \App\Entities\Success;
 use \App\Entities\Fail;
 use \App\Entities\Error;
@@ -42,13 +43,15 @@ class ApiController extends Controller
             Router::routeRuleValidation(func_get_args(), 'from/{alpha[3]}/to/{alpha[3]}/value/{digit}');
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = func_get_args();
 
-            $currencyService = new CurrencyService(new ECBCurrencyExchange());
+            $currencyService = new CurrencyService(
+                new ECBCurrencyExchange(),
+                new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS)
+            );
 
             $rate = $currencyService->getExchangeRate(
                 new Currency(strtoupper($fromCurrency)),
                 new Currency(strtoupper($toCurrency))
             );
-           // var_dump($rate);die;
 
             echo(new Success([
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),

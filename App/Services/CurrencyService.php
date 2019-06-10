@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Entities\CommissionsCollection;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
@@ -24,11 +25,15 @@ class CurrencyService
 
     /** @var CurrencyCollection */
     private $eurExchangeRates;
+    private $commissions;
 
 
-    public function __construct(EurCurrencyExchangeInterface $randomCurrencyExchange)
-    {
+    public function __construct(
+        EurCurrencyExchangeInterface $randomCurrencyExchange,
+        CommissionsCollection $commissions
+    ) {
         $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
+        $this->commissions = $commissions;
     }
 
 
