@@ -1,10 +1,10 @@
 <?php
 
 
-namespace \App\Entities;
+namespace App\Entities;
 
 
-class Commision
+class Commission
 {
 
     private $from;
@@ -24,9 +24,9 @@ class Commision
             }
         }
 
-        $this->from = $fromValue;
-        $this->to = $toValue;
-        $this->commission = $commissionValue;
+        $this->from         = $fromValue;
+        $this->to           = $toValue;
+        $this->commission   = $commissionValue;
     }
     
     public function getFrom()
