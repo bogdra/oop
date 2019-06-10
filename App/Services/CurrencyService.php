@@ -25,6 +25,8 @@ class CurrencyService
 
     /** @var CurrencyCollection */
     private $eurExchangeRates;
+
+    /* @var CommissionsCollection */
     private $commissions;
 
 
@@ -98,6 +100,14 @@ class CurrencyService
         return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
     }
 
+    public function test(Currency $fromCurrency, Currency $toCurrency, int $amount)
+    {
+
+        foreach ($this->commissions-> as $commission)
+        {
+            var_dump($commission->inIne);
+        }
+    }
 
     private function canExchange(Currency $currency): void
     {
