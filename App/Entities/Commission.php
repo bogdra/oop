@@ -17,30 +17,27 @@ class Commission
             throw new \Exception('The toValue must be grater or equal with the fromValue');
         }
 
-        foreach ([$fromValue, $toValue, $commissionValue] as $value)
-        {
+        foreach ([$fromValue, $toValue, $commissionValue] as $value) {
             if ($value < 0) {
                 throw new \Exception('value must be greater or equal to 0');
             }
         }
 
-        $this->from         = $fromValue;
-        $this->to           = $toValue;
-        $this->commission   = $commissionValue;
-    }
-    
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    public function getTo()
-    {
-        return $this->to;
+        $this->from = $fromValue;
+        $this->to = $toValue;
+        $this->commission = $commissionValue;
     }
 
     public function getCommission()
     {
         return $this->commission;
+    }
+
+    public function inInterval($amount): bool
+    {
+        if (($amount <= $this->from) && ($amount >= $this->to)) {
+            return true;
+        }
+        return false;
     }
 }
