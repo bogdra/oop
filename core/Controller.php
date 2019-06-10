@@ -1,44 +1,35 @@
 <?php
-namespace App\Controller;
 
-use \App\Core\View;
+
+namespace App\Controllers;
+
+
+use \Core\View;
+use \App\Exceptions\Request\InvalidRequestMethodException;
+use \App\Exceptions\Request\RequestMethodNotAllowedException;
+
 
 class Controller
 {
     public $view;
-    public $currentRequestMethod;
+    public $requestMethodUsed;
 
 
     public function __construct()
     {
         $this->view = new View();
-        $this->currentRequestMethod = $_SERVER['REQUEST_METHOD'];
+        $this->requestMethodUsed = $_SERVER['REQUEST_METHOD'];
     }
 
 
-    public function allowedRequestMethods($allowedMethods = [])
+    public function allowedRequestMethods(string $allowedMethod)
     {
-        foreach ($allowedMethods as $allowedMethod) {
-            try
-            {
-                if (!\in_array(\strtoupper($allowedMethod), SUPPORTED_REQUEST_METHODS))
-                {
-                    throw new \Exception('The selected request method is not valid');
-                    break;
-                }
-                elseif ($this->currentRequestMethod != $allowedMethod)
-                {
-                    throw new \Exception('The request method '.$this->currentRequestMethod.' is not supported for this route');
-                }
-            }
-            catch (\Exception $e)
-            {
-                \Core\H::dnd($e);
-            }
+            if (!\in_array(\strtoupper($allowedMethod), SUPPORTED_REQUEST_METHODS)) {
+                throw new InvalidRequestMethodException('The selected request method is not valid');
 
-
-        }
+            } elseif ($this->requestMethodUsed != $allowedMethod) {
+                throw new RequestMethodNotAllowedException
+                ('The request method ' . $this->requestMethodUsed . ' is not supported for this route');
+            }
     }
-
-
 }

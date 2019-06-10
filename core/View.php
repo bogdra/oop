@@ -1,36 +1,71 @@
 <?php
-namespace App\Core;
+
+namespace Core;
+
+use App\Exceptions\View\FileNotFoundException;
+use App\Traits\LoggingTrait;
 
 class View
 {
-    protected   $viewsPath = ROOT. DS. 'app'. DS. 'views',
-                $siteTitle = SITE_TITLE,
-                $params;
+    use LoggingTrait;
 
-    public function render(string $view, $params = [] )
+    protected $viewsPath;
+    protected $title;
+    public $params;
+
+
+    public function __construct()
     {
-        $this->params = $params;
-
-        list($controller, $action) = explode('/', $view);
-        $viewPath = $this->viewsPath. DS. $controller. DS. $action. '.php';
-
-        (file_exists($viewPath)) ? include $viewPath : die("The view $view does not exists");
-
+        $this->viewsPath = ROOT . DS . 'App' . DS . 'Views';
+        $this->title = SITE_TITLE;
     }
 
-    public function getSiteTitle() :string
+
+    public function render(string $view, $params = [])
     {
-        echo 'Exercitiu';
+        try {
+            $this->params = $params;
+
+            list($controller, $action) = explode('/', $view);
+            $viewPath = $this->viewsPath . DS . $controller . DS . $action . '.php';
+
+            if (!file_exists($viewPath)) {
+                throw new FileNotFoundException("The view $view does not exists");
+            } else {
+                include_once($viewPath);
+            }
+        } catch (FileNotFoundException $e) {
+            $this->logger->warning($e->getMessage());
+            //TODO: kill execution or redirect to specific page
+        }
     }
+
+
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+    }
+
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
 
     public function getPartial(string $partialName)
     {
-        $partialFullPath = $this->viewsPath. DS. 'partials'. DS. $partialName. '.php';
+        try {
+            $partialFullPath = $this->viewsPath . DS . 'partials' . DS . $partialName . '.php';
 
-        if (file_exists($partialFullPath))
-        {
-            include($partialFullPath);
+            if (!file_exists($partialFullPath)) {
+                throw new FileNotFoundException("The partial html file, $partialFullPath does not exists");
+            } else {
+                include_once($partialFullPath);
+            }
+        } catch (FileNotFoundException $e) {
+            $this->logger->warning($e->getMessage());
+            //TODO: kill execution
         }
-
     }
 }

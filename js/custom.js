@@ -1,48 +1,42 @@
 //this function appends the json data to the table 'gable'
 function append_json(data) {
-    var temp1 = data;
     //console.log(data);
     var table = document.getElementById('gable');
 
-    for (var ceva in temp1) {
+    data.forEach(function (obj) {
+        console.log(obj);
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td>' + ceva + '</td>' +
-            '<td>' + temp1[ceva] + '</td>';
+        tr.innerHTML = '<td>' + obj.toCurrency + '</td>' +
+            '<td>' + obj.rate + '</td>';
         table.appendChild(tr);
-    }
+    });
 }
 
 //this function clears the table
-function clearTable()
-{
+function clearTable() {
     var table = document.getElementById("gable");
-
-    for(var i = table.rows.length - 1; i > 0; i--)
-    {
+    for (var i = table.rows.length - 1; i > 0; i--) {
         table.deleteRow(i);
     }
 }
 
-//this function retrives the currency from the route
-function updateCurrency($currency)
-{
-    console.log($currency);
+//this function retrieves the currency from the route
+function updateCurrency($currency) {
+   // console.log($currency);
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'exchange/get/'+ $currency);
-    xhr.onload = function() {
+    xhr.open('GET', 'Api/exchange/get/' + $currency);
+    xhr.onload = function () {
         if (xhr.status === 200) {
             var data = JSON.parse(this.responseText);
             clearTable();
-            append_json(data);
-           // console.log(data);
-        }
-        else {
+            append_json(data.data);
+        } else {
             alert('Request failed. Returned status of ' + xhr.status);
         }
     };
     xhr.send();
 }
 
-window.onload = function() {
+window.onload = function () {
     updateCurrency('EUR');
 };
