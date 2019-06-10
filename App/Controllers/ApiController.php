@@ -48,6 +48,14 @@ class ApiController extends Controller
                 new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS)
             );
 
+            $temp = $currencyService->test(
+                new Currency(strtoupper($fromCurrency)),
+                new Currency(strtoupper($toCurrency)),
+                intval($currencyValue)
+            );
+            var_dump($temp);
+
+            var_dump($temp);
             $rate = $currencyService->getExchangeRate(
                 new Currency(strtoupper($fromCurrency)),
                 new Currency(strtoupper($toCurrency))

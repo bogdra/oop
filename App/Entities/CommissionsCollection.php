@@ -26,4 +26,16 @@ class CommissionsCollection
 
         }
     }
+
+    public function getCommissions() :array
+    {
+        return $this->commissions;
+    }
+
+    public function getUsedCurrency() :Currency
+    {
+        return $this->usedCurrency;
+    }
+
+
 }

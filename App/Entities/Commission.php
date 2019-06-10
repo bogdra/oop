@@ -28,14 +28,15 @@ class Commission
         $this->commission = $commissionValue;
     }
 
-    public function getCommission()
+    public function getCommissionValue()
     {
         return $this->commission;
     }
 
-    public function inInterval($amount): bool
+
+    public function fitsCommissionRule(int $amount): bool
     {
-        if (($amount <= $this->from) && ($amount >= $this->to)) {
+        if (($amount <= $this->to) && ($amount >= $this->from)) {
             return true;
         }
         return false;

@@ -100,12 +100,24 @@ class CurrencyService
         return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
     }
 
+
     public function test(Currency $fromCurrency, Currency $toCurrency, int $amount)
     {
+       // var_dump($this->commissions->getUsedCurrency());
+        $amountConvertedForCommision = $this->getExchangeRate($fromCurrency, $this->commissions->getUsedCurrency()) * $amount;
 
-        foreach ($this->commissions-> as $commission)
+        var_dump($amountConvertedForCommision);
+        foreach ($this->commissions->getCommissions() as $commission)
         {
-            var_dump($commission->inIne);
+
+
+            if ($commission->fitsCommissionRule($amountConvertedForCommision))
+            {
+                $com = $commission->getCommissionValue();
+                var_dump($com);
+                break;
+            }
+
         }
     }
 
