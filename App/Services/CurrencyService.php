@@ -31,12 +31,9 @@ class CurrencyService
     private $commissions;
 
 
-    public function __construct(
-        EurCurrencyExchangeInterface $randomCurrencyExchange,
-        CommissionsCollection $commissions
-    ) {
+    public function __construct(EurCurrencyExchangeInterface $randomCurrencyExchange) {
         $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
-        $this->commissions = $commissions;
+        $this->commissions = new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS);
     }
 
 
@@ -104,14 +101,17 @@ class CurrencyService
 
     public function getCommissions(Currency $fromCurrency, int $amount): array
     {
-        $response = ['commissionPercentage' => 0, 'commissionToPay' => 0];
+        $response = [
+            'commissionPercentage' => 0,
+            'commissionToPay' => 0
+        ];
 
         //converts the amount given from given currency to currency used for commissioning Ex:EUR
         $amountConvertedForCommission = $this->getExchangeRate($fromCurrency,
                 $this->commissions->getUsedCurrency()) * $amount;
-        var_dump($this->commissions);die;
+
         /** @var Commission $commissionRule */
-        foreach ($this->commissions as $commissionRule) {
+        foreach ($this->commissions->getCommissions() as $commissionRule) {
             if ($commissionRule->fitsCommissionRule($amountConvertedForCommission)) {
                 $response['commissionPercentage'] = $commissionRule->getCommissionValue();
                 $response['commissionToPay'] = round($commissionRule->getCommissionValue() * $amount, 2);

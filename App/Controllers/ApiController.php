@@ -44,9 +44,7 @@ class ApiController extends Controller
             list($from, $fromCurrency, $to, $toCurrency, $value, $currencyValue) = func_get_args();
 
             $currencyService = new CurrencyService(
-                new ECBCurrencyExchange(),
-                new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS)
-            );
+                new ECBCurrencyExchange());
 
             $commissions = $currencyService->getCommissions(
                 new Currency(strtoupper($fromCurrency)),
@@ -107,7 +105,6 @@ class ApiController extends Controller
             $this->logger->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {
-            var_dump($e);die;
             $this->logger->alert($e->getMessage());
             echo(new Fail($e->getMessage()));
         }
