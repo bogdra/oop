@@ -23,7 +23,6 @@ class CommissionsCollection
                 $commission['valueFrom'],
                 $commission['valueTo'],
                 $commission['commission']);
-
         }
     }
 
