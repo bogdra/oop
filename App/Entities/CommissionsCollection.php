@@ -6,7 +6,7 @@ namespace App\Entities;
 class CommissionsCollection
 {
 
-    private $commissions = [];
+    private $commissionRules = [];
     private $usedCurrency;
 
 
@@ -19,11 +19,21 @@ class CommissionsCollection
         $this->usedCurrency = new Currency($commissionCurrency);
 
         foreach (COMMISSIONS as $commission) {
-            $this->commissions[] = new Commission(
+            $this->commissionRules[] = new Commission(
                 $commission['valueFrom'],
                 $commission['valueTo'],
                 $commission['commission']);
 
         }
+    }
+
+    public function getCommissions(): array
+    {
+        return $this->commissionRules;
+    }
+
+    public function getUsedCurrency(): Currency
+    {
+        return $this->usedCurrency;
     }
 }
