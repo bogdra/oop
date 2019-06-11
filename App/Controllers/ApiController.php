@@ -21,6 +21,9 @@ use App\Exceptions\Currency\CurrencyCharacterTypeInvalidException;
 use App\Exceptions\Currency\CurrencyLengthInvalidException;
 use App\Exceptions\Request\TypeMismatchBetweenRuleForParameterException;
 use App\Exceptions\Currency\CurrencyNotInPermittedCurrenciesException;
+use App\Exceptions\Currency\CurrencyCommissionRuleMustHaveThreeElementsException;
+use App\Exceptions\Currency\CurrencyCommissionElementSmallerOrEqualToZeroException;
+use App\Exceptions\Currency\CurrencyCommissionToValueSmallerThanFromValueException;
 
 
 class ApiController extends Controller
@@ -58,25 +61,30 @@ class ApiController extends Controller
 
             echo(new Success([
                 'CommissionRate' => $commissions['commissionPercentage'],
-                'CommissionToPay'=> $commissions['commissionToPay'],
+                'CommissionToPay' => $commissions['commissionToPay'],
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
                 'ConversionRate' => $rate
             ]));
 
-        } catch (DifferenceBetweenValidationRuleAndParametersException $e) {
-            $this->warning($e->getMessage());
+        } catch (
+        CurrencyCommissionToValueSmallerThanFromValueException |
+        CurrencyCommissionElementSmallerOrEqualToZeroException |
+        CurrencyCommissionRuleMustHaveThreeElementsException
+        $e
+        ) {
+            $this->logger->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
-        } catch (TypeMismatchBetweenRuleForParameterException $e) {
-            $this->warning($e->getMessage());
-            echo(new Fail($e->getCustomMessage()));
-        }  catch (LengthMismatchBetweenRuleAndParameterException $e) {
-            $this->warning($e->getMessage());
-            echo(new Fail($e->getCustomMessage()));
-        } catch (FixedRouteElementsException $e) {
-            $this->warning($e->getMessage());
-            echo(new Fail($e->getCustomMessage()));
+        } catch (
+        DifferenceBetweenValidationRuleAndParametersException |
+        LengthMismatchBetweenRuleAndParameterException |
+        TypeMismatchBetweenRuleForParameterException |
+        FixedRouteElementsException
+        $e
+        ) {
+            $this->logger->warning($e->getMessage());
+            echo(new Error($e->getCustomMessage()));
         } catch (\Throwable $e) {
-            $this->alert($e->getMessage());
+            $this->logger->alert($e->getMessage());
             echo(new Fail($e->getMessage()));
         }
     }
@@ -98,10 +106,9 @@ class ApiController extends Controller
                 ->formatCurrencyCollectionForApi();
             echo(new Success($response));
 
-        } catch (CurrencyLengthInvalidException $e) {
-            $this->logger->warning($e->getMessage());
-            echo(new Fail($e->getCustomMessage()));
-        } catch (CurrencyCharacterTypeInvalidException $e) {
+        } catch (
+        CurrencyLengthInvalidException |
+        CurrencyCharacterTypeInvalidException $e) {
             $this->logger->warning($e->getMessage());
             echo(new Fail($e->getCustomMessage()));
         } catch (\Throwable $e) {

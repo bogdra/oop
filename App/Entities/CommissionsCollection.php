@@ -1,6 +1,10 @@
 <?php
 
+
 namespace App\Entities;
+
+
+use App\Exceptions\Currency\CurrencyCommissionRuleMustHaveThreeElementsException;
 
 
 class CommissionsCollection
@@ -12,8 +16,9 @@ class CommissionsCollection
 
     public function __construct(string $commissionCurrency, array $commissionsRules)
     {
-        if (!count($commissionsRules)) {
-            throw new \Exception('The commission constant can\'t be empty');
+        if (count($commissionsRules) != 3) {
+            throw new CurrencyCommissionRuleMustHaveThreeElementsException
+            ('The commissions rule array must have 3 elements');
         }
 
         $this->usedCurrency = new Currency($commissionCurrency);

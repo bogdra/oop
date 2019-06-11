@@ -4,6 +4,10 @@
 namespace App\Entities;
 
 
+use App\Exceptions\Currency\CurrencyCommissionToValueSmallerThanFromValueException;
+use App\Exceptions\Currency\CurrencyCommissionElementSmallerOrEqualToZeroException;
+
+
 class Commission
 {
 
@@ -14,12 +18,14 @@ class Commission
     public function __construct(float $fromValue, float $toValue, float $commissionValue)
     {
         if ($fromValue > $toValue) {
-            throw new \Exception('The toValue must be grater or equal with the fromValue');
+            throw new CurrencyCommissionToValueSmallerThanFromValueException
+            ('The toValue must be grater or equal with the fromValue');
         }
 
         foreach ([$fromValue, $toValue, $commissionValue] as $value) {
             if ($value < 0) {
-                throw new \Exception('value must be greater or equal to 0');
+                throw new CurrencyCommissionElementSmallerOrEqualToZeroException
+                ('value must be greater or equal to 0');
             }
         }
 
@@ -27,6 +33,7 @@ class Commission
         $this->to = $toValue;
         $this->commission = $commissionValue;
     }
+
 
     public function getCommissionValue()
     {
