@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Entities\Commission;
 use App\Entities\CommissionsCollection;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
@@ -100,20 +101,31 @@ class CurrencyService
         return round($fromCurrencyToEurRate * $forCurrencyRate, 2);
     }
 
-    public function test(Currency $fromCurrency, Currency $toCurrency, int $amount)
-    {
 
-        foreach ($this->commissions-> as $commission)
-        {
-            var_dump($commission->inIne);
+    public function getCommissions(Currency $fromCurrency, int $amount): array
+    {
+        $response = ['commissionPercentage' => 0, 'commissionToPay' => 0];
+
+        //converts the amount given from given currency to currency used for commissioning Ex:EUR
+        $amountConvertedForCommission = $this->getExchangeRate($fromCurrency,
+                $this->commissions->getUsedCurrency()) * $amount;
+        var_dump($this->commissions);die;
+        /** @var Commission $commissionRule */
+        foreach ($this->commissions as $commissionRule) {
+            if ($commissionRule->fitsCommissionRule($amountConvertedForCommission)) {
+                $response['commissionPercentage'] = $commissionRule->getCommissionValue();
+                $response['commissionToPay'] = round($commissionRule->getCommissionValue() * $amount, 2);
+                break;
+            }
         }
+        return $response;
     }
 
     private function canExchange(Currency $currency): void
     {
         if (!$this->eurExchangeRates->hasParity($currency)) {
             throw new CurrencyNotInPermittedCurrenciesException
-            ('the given currency ('.$currency.') is not present in the array currencies');
+            ('the given currency (' . $currency . ') is not present in the array currencies');
         }
     }
 

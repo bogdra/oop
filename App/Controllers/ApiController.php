@@ -48,12 +48,19 @@ class ApiController extends Controller
                 new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS)
             );
 
+            $commissions = $currencyService->getCommissions(
+                new Currency(strtoupper($fromCurrency)),
+                (int)$currencyValue
+            );
+
             $rate = $currencyService->getExchangeRate(
                 new Currency(strtoupper($fromCurrency)),
                 new Currency(strtoupper($toCurrency))
             );
 
             echo(new Success([
+                'CommissionRate' => $commissions['commissionPercentage'],
+                'CommissionToPay'=> $commissions['commissionToPay'],
                 'ConvertedValue' => round((float)$currencyValue * $rate, 2),
                 'ConversionRate' => $rate
             ]));
