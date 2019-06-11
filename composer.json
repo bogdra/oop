@@ -1,12 +1,17 @@
 {
   "autoload": {
+    "psr-4": {
+      "App\\": "App",
+      "App\\Entities\\": ["App/Entities","App/Entities/Api"]
+    },
     "classmap": [
-      "interfaces",
-      "core",
-      "app/controllers",
-      "app/entities",
-      "app/services",
-      "app/exceptions"
+      "core"
     ]
+  },
+  "require": {
+    "ext-json": "*",
+    "ext-SimpleXML": "*",
+    "ext-cType": "*",
+    "monolog/monolog": "^1.24"
   }
 }

@@ -1,11 +1,19 @@
 <?php
 
+
 namespace Core;
 
+
 use App\Interfaces\PersistenceInterface;
+use App\Traits\Log;
+
 
 class Db implements PersistenceInterface
 {
+
+    use Log;
+
+
     public static $instance;
     private $queryHolder;
     private $pdoConn;
@@ -21,9 +29,12 @@ class Db implements PersistenceInterface
         }
         catch(\PDOException $e)
         {
-            die($e->getMessage());
+            $this->emergency($e->getMessage());
+            echo($e->getMessage());
+
         }
     }
+
 
     public static function init() :DB
     {
@@ -62,6 +73,7 @@ class Db implements PersistenceInterface
 
 
     }
+
 
     /**
      * @param $table
@@ -108,7 +120,6 @@ class Db implements PersistenceInterface
             $limit = ' LIMIT ' . $params['limit'];
         }
         $sql = "SELECT * FROM {$table}{$conditionString}{$order}{$limit}";
-        var_dump($sql);
         if($this->query($sql, $bind)) {
             if(!count($this->_result)) return false;
             return true;
@@ -136,6 +147,7 @@ class Db implements PersistenceInterface
         return false;
     }
 
+
     public function update(string $table, int $id, $fields = []) {
         $fieldString = '';
         $values = [];
@@ -152,6 +164,7 @@ class Db implements PersistenceInterface
         return false;
     }
 
+
     public function delete(string $table, int $id) {
         $sql = "DELETE FROM {$table} WHERE id = {$id}";
         if(!$this->query($sql)->error()) {
@@ -160,10 +173,12 @@ class Db implements PersistenceInterface
         return false;
     }
 
+
     public function count()
     {
         return count($this->result);
     }
+
 
     public function getResult()
     {
