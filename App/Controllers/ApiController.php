@@ -49,22 +49,12 @@ class ApiController extends Controller
             $currencyService = new CurrencyService(
                 new ECBCurrencyExchange());
 
-            $commissions = $currencyService->getCommissions(
-                new Currency(strtoupper($fromCurrency)),
-                (int)$currencyValue
-            );
-
-            $rate = $currencyService->getExchangeRate(
-                new Currency(strtoupper($fromCurrency)),
-                new Currency(strtoupper($toCurrency))
-            );
-
-            echo(new Success([
-                'CommissionRate' => $commissions['commissionPercentage'],
-                'CommissionToPay' => $commissions['commissionToPay'],
-                'ConvertedValue' => round((float)$currencyValue * $rate, 2),
-                'ConversionRate' => $rate
-            ]));
+            echo new Success(
+                $currencyService->getExchangeRateAndCommission(
+                    new Currency(strtoupper($fromCurrency)),
+                    new Currency(strtoupper($toCurrency)),
+                    (int)$currencyValue
+                ));
 
         } catch (
         CurrencyCommissionToValueSmallerThanFromValueException |
@@ -84,6 +74,7 @@ class ApiController extends Controller
             $this->logger->warning($e->getMessage());
             echo(new Error($e->getCustomMessage()));
         } catch (\Throwable $e) {
+            var_dump($e->getMessage());die;
             $this->logger->alert($e->getMessage());
             echo(new Fail($e->getMessage()));
         }

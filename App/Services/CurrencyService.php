@@ -31,7 +31,8 @@ class CurrencyService
     private $commissions;
 
 
-    public function __construct(EurCurrencyExchangeInterface $randomCurrencyExchange) {
+    public function __construct(EurCurrencyExchangeInterface $randomCurrencyExchange)
+    {
         $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
         $this->commissions = new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS);
     }
@@ -86,7 +87,6 @@ class CurrencyService
         return new CurrencyCollection($currency, $rates);
     }
 
-
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
         foreach ([$toCurrency, $fromCurrency] as $currency) {
@@ -99,15 +99,11 @@ class CurrencyService
     }
 
 
-    public function getCommissions(Currency $fromCurrency, int $amount): array
+    private function getCommissions(Currency $fromCurrency, int $amount): array
     {
-        $response = [
-            'commissionPercentage' => 0,
-            'commissionToPay' => 0
-        ];
-
         //converts the amount given from given currency to currency used for commissioning Ex:EUR
-        $amountConvertedForCommission = $this->getExchangeRate($fromCurrency,
+        $amountConvertedForCommission = $this->getExchangeRate(
+                $fromCurrency,
                 $this->commissions->getUsedCurrency()) * $amount;
 
         /** @var Commission $commissionRule */
@@ -119,6 +115,19 @@ class CurrencyService
             }
         }
         return $response;
+    }
+
+    public function getExchangeRateAndCommission(Currency $fromCurrency, Currency $toCurrency, int $moneyAmount)
+    {
+        $rate = $this->getExchangeRate($fromCurrency, $toCurrency);
+
+        return array_merge(
+            [
+                'exchangeRate' => $rate,
+                'exchangeAmount' => round($moneyAmount * $rate, 2)
+            ],
+            $this->getCommissions($fromCurrency, $moneyAmount)
+        );
     }
 
     private function canExchange(Currency $currency): void
