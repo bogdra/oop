@@ -7,7 +7,6 @@ use App\Entities\ExchangeRate;
 use App\Exceptions\Persistance\DbSavingOperationFailedException;
 use App\Exceptions\Persistance\InvalidSavingDestinationException;
 use App\Exceptions\File\RemoteExchangeFileNotFoundException;
-use App\Traits\Log;
 use App\Traits\LoggingTrait;
 use \Core\Db;
 
@@ -18,7 +17,7 @@ class SaveController extends Controller
 
     public function __construct()
     {
-        $this->allowedRequestMethods();
+        $this->allowedRequestMethods('GET');
     }
 
 
@@ -49,15 +48,16 @@ class SaveController extends Controller
                 default:
                     throw new InvalidSavingDestinationException("Please specify where to save the currency rates");
             }
-        } catch (InvalidSavingDestinationException $e) {
-            $this->warning($e->getMessage());
+        } catch (
+        InvalidSavingDestinationException |
+        DbSavingOperationFailedException |
+        RemoteExchangeFileNotFoundException
+        $e ) {
+            $this->logger->critical($e->getMessage());
             echo $e->getCustomMessage();
-        } catch (DbSavingOperationFailedException $e) {
-            $this->warning($e->getMessage());
-            echo $e->getCustomMessage();
-        } catch (RemoteExchangeFileNotFoundException $e) {
-            $this->warning($e->getMessage());
-            echo $e->getCustomMessage();
+        } catch (\Throwable $e) {
+            $this->logger->warning($e->getMessage());
+            echo $e->getMessage();
         }
     }
 

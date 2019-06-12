@@ -4,6 +4,8 @@
 namespace App\Services;
 
 
+use App\Entities\Commission;
+use App\Entities\CommissionsCollection;
 use App\Entities\Currency;
 use App\Entities\CurrencyCollection;
 use App\Entities\ExchangeRate;
@@ -25,10 +27,14 @@ class CurrencyService
     /** @var CurrencyCollection */
     private $eurExchangeRates;
 
+    /* @var CommissionsCollection */
+    private $commissions;
+
 
     public function __construct(EurCurrencyExchangeInterface $randomCurrencyExchange)
     {
         $this->eurExchangeRates = $randomCurrencyExchange->getEurCollection();
+        $this->commissions = new CommissionsCollection(COMMISSION_CURRENCY, COMMISSIONS);
     }
 
 
@@ -81,7 +87,6 @@ class CurrencyService
         return new CurrencyCollection($currency, $rates);
     }
 
-
     public function getExchangeRate(Currency $fromCurrency, Currency $toCurrency): float
     {
         foreach ([$toCurrency, $fromCurrency] as $currency) {
@@ -94,11 +99,42 @@ class CurrencyService
     }
 
 
+    private function getCommissions(Currency $fromCurrency, int $amount): array
+    {
+        //converts the amount given from given currency to currency used for commissioning Ex:EUR
+        $amountConvertedForCommission = $this->getExchangeRate(
+                $fromCurrency,
+                $this->commissions->getUsedCurrency()) * $amount;
+
+        /** @var Commission $commissionRule */
+        foreach ($this->commissions->getCommissions() as $commissionRule) {
+            if ($commissionRule->fitsCommissionRule($amountConvertedForCommission)) {
+                $response['commissionPercentage'] = $commissionRule->getCommissionValue();
+                $response['commissionToPay'] = round($commissionRule->getCommissionValue() * $amount, 2);
+                break;
+            }
+        }
+        return $response;
+    }
+
+    public function getExchangeRateAndCommission(Currency $fromCurrency, Currency $toCurrency, int $moneyAmount)
+    {
+        $rate = $this->getExchangeRate($fromCurrency, $toCurrency);
+
+        return array_merge(
+            [
+                'exchangeRate' => $rate,
+                'exchangeAmount' => round($moneyAmount * $rate, 2)
+            ],
+            $this->getCommissions($fromCurrency, $moneyAmount)
+        );
+    }
+
     private function canExchange(Currency $currency): void
     {
         if (!$this->eurExchangeRates->hasParity($currency)) {
             throw new CurrencyNotInPermittedCurrenciesException
-            ('the given currency ('.$currency.') is not present in the array currencies');
+            ('the given currency (' . $currency . ') is not present in the array currencies');
         }
     }
 
